@@ -1,0 +1,20 @@
+schema: '2.0'
+stages:
+  preprocess:
+    cmd: python src/features/build_features.py
+    deps:
+    - path: data/raw
+      hash: md5
+      md5: a98a540e96f904319c09744d3273fb35.dir
+      size: 5744211
+      nfiles: 2
+    - path: src/features/build_features.py
+      hash: md5
+      md5: aea00e5e28e5cca43697013832c05807
+      size: 880
+    outs:
+    - path: data/processed
+      hash: md5
+      md5: 3a79ba818d8899fce1f62fa350e68b68.dir
+      size: 5582706
+      nfiles: 2
