@@ -43,6 +43,8 @@ Airflow ETL → Feature Store (Feast)
 
 ML Model Training Pipeline → MLflow (Experiments + Registry)
 
+Client Request → FastAPI → Load Model → Predict → JSON Response
+
 CI/CD triggers build → Docker image → Deploy to Kubernetes
 
 Prediction Service (FastAPI) → Accessible via REST/gRPC
