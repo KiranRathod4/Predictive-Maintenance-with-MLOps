@@ -158,3 +158,17 @@ Pipeline:
 ↓
 
 5.evaluate → saves metrics in metrics.json + plots
+
+
+### why containarization in docker 
+our setup only works on your machine with your virtualenv.
+If someone else runs it, they might hit:
+
+Different Python version
+
+Missing dependencies
+
+Wrong paths (Windows vs Linux)
+
+Docker solves this → packages code + dependencies + environment into a container.
+Result → works everywhere, the same way.
