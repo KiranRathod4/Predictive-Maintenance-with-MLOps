@@ -141,3 +141,18 @@ predictive-maintenance/
 - Open-source tools: MLflow, Feast, Evidently, Prometheus, Grafana, FastAPI  
 
 
+Pipeline:
+
+1.raw data (data/raw.dvc)
+↓
+
+2.preprocess → outputs data/processed/
+↓
+
+3.features → outputs data/features/
+↓
+
+4.train → saves model in models/
+↓
+
+5.evaluate → saves metrics in metrics.json + plots
