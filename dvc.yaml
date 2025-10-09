@@ -2,7 +2,30 @@ stages:
   preprocess:
     cmd: python src/features/build_features.py
     deps:
-      - data/raw
-      - src/features/build_features.py
+    - data/raw
+    - src/features/build_features.py
     outs:
-      - data/processed
+    - data/processed
+
+  train:
+    cmd: python src/models/train.py
+    deps:
+    - data/features/train_FD001_features.csv
+    - src/models/train.py
+    outs:
+    - models/model_v1.pkl
+
+  evaluate:
+    cmd: python src/models/evaluate.py
+    deps:
+    - models/model_v1.pkl
+    - data/features/train_FD001_features.csv
+    - src/models/evaluate.py
+    metrics:
+    - metrics.json:
+        cache: false
+    outs:
+    - reports/figures/pred_vs_actual.png
+    - reports/figures/residuals.png
+  features:
+    cmd: \

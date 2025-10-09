@@ -18,3 +18,77 @@ stages:
       md5: 3a79ba818d8899fce1f62fa350e68b68.dir
       size: 5582706
       nfiles: 2
+  features:
+    cmd: python src/features/make_features.py
+    deps:
+    - path: data/processed
+      hash: md5
+      md5: 3a79ba818d8899fce1f62fa350e68b68.dir
+      size: 5582706
+      nfiles: 2
+    - path: src/features/make_features.py
+      hash: md5
+      md5: ce2fa001b5fe3866194a326611b660bb
+      size: 857
+    outs:
+    - path: data/features
+      hash: md5
+      md5: 5a9fd97b253ad75957b383e0fa148114.dir
+      size: 3570631
+      nfiles: 1
+  train:
+    cmd: python src/models/train.py
+    deps:
+    - path: data/features/train_FD001_features.csv
+      hash: md5
+      md5: b77e0d7b11d8648d33bf0ceca762d47f
+      size: 3570631
+    - path: src/models/train.py
+      hash: md5
+      md5: 2b7a64d73dfbdb8562d0ee55798539a0
+      size: 7113
+    outs:
+    - path: models/model.pkl
+      hash: md5
+      md5: f25e5e4c1a8464928d47fe801977db9a
+      size: 14200481
+    - path: reports/figures/pred_vs_actual.png
+      hash: md5
+      md5: b86d943dfe278e5a32eea3c07e7191f2
+      size: 196129
+    - path: reports/figures/residuals.png
+      hash: md5
+      md5: 6a698908a0b8c7c7076d98d7ce2d0b84
+      size: 259882
+    - path: train_metrics.json
+      hash: md5
+      md5: 6d2c3fbbb597616aaa7df2e243b9b844
+      size: 223
+  evaluate:
+    cmd: python src/models/evaluate_model.py
+    deps:
+    - path: data/features/train_FD001_features.csv
+      hash: md5
+      md5: b77e0d7b11d8648d33bf0ceca762d47f
+      size: 3570631
+    - path: models/model.pkl
+      hash: md5
+      md5: f25e5e4c1a8464928d47fe801977db9a
+      size: 14200481
+    - path: src/models/evaluate_model.py
+      hash: md5
+      md5: b1a2e16b8fd18f8bc02deb6d46f10ebc
+      size: 2136
+    outs:
+    - path: eval_metrics.json
+      hash: md5
+      md5: c3ecb0abfb11a3fc2f78b30edf365dbf
+      size: 98
+    - path: plots/residuals.csv
+      hash: md5
+      md5: 52a67ba47559fb4fff5d4a63c6094a06
+      size: 174796
+    - path: plots/residuals.png
+      hash: md5
+      md5: f1ebd77ed21d27a3acff43186639e13c
+      size: 412511
