@@ -1,0 +1,278 @@
+# .github/workflows/model-retrain.yml
+name: Model Retraining Pipeline
+
+on:
+  # Schedule weekly retraining
+  schedule:
+    - cron: "0 2 * * 1" # Every Monday at 2 AM UTC
+
+  # Manual trigger for ad-hoc retraining
+  workflow_dispatch:
+    inputs:
+      data_version:
+        description: "Data version to use for training"
+        required: true
+        default: "latest"
+      experiment_name:
+        description: "MLflow experiment name"
+        required: true
+        default: "predictive-maintenance"
+
+# Permissions needed for the workflow
+permissions:
+  contents: read
+  packages: write
+  actions: read
+
+env:
+  PYTHON_VERSION: "3.11"
+  MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
+
+jobs:
+  # Job 1: Data Validation and Preprocessing
+  data-validation:
+    runs-on: ubuntu-latest
+    name: 📊 Data Validation
+
+    outputs:
+      data-valid: ${{ steps.validate.outputs.valid }}
+      data-version: ${{ steps.validate.outputs.version }}
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+
+      - name: 📦 Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: 🔍 Validate data quality
+        id: validate
+        run: |
+          python src/data/validate_data.py \
+            --data-version ${{ github.event.inputs.data_version || 'latest' }}
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+
+      - name: 📊 Generate data report
+        run: |
+          python src/data/generate_data_report.py
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+
+      - name: 📤 Upload data validation report
+        uses: actions/upload-artifact@v3
+        with:
+          name: data-validation-report
+          path: reports/data_validation_report.html
+
+  # Job 2: Model Training with MLflow
+  model-training:
+    runs-on: ubuntu-latest
+    name: 🤖 Model Training
+    needs: data-validation
+    if: needs.data-validation.outputs.data-valid == 'true'
+
+    outputs:
+      model-version: ${{ steps.train.outputs.version }}
+      model-performance: ${{ steps.train.outputs.performance }}
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+
+      - name: 📦 Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: 🤖 Train model with MLflow
+        id: train
+        run: |
+          python src/models/train.py \
+            --experiment-name ${{ github.event.inputs.experiment_name || 'predictive-maintenance' }} \
+            --data-version ${{ needs.data-validation.outputs.data-version }}
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+          MLFLOW_TRACKING_URI: ${{ env.MLFLOW_TRACKING_URI }}
+
+      - name: 📊 Model evaluation
+        run: |
+          python src/models/evaluate_model.py \
+            --model-version ${{ steps.train.outputs.version }}
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+
+      - name: 📈 Generate training report
+        run: |
+          python src/reports/generate_training_report.py \
+            --run-id ${{ steps.train.outputs.run-id }}
+
+      - name: 📤 Upload training artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: training-artifacts
+          path: |
+            reports/training_report.html
+            models/
+            reports/figures/
+
+  # Job 3: Model Validation and Testing
+  model-validation:
+    runs-on: ubuntu-latest
+    name: ✅ Model Validation
+    needs: model-training
+
+    outputs:
+      validation-passed: ${{ steps.validate.outputs.passed }}
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+
+      - name: 📦 Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: ✅ Validate model performance
+        id: validate
+        run: |
+          python tests/test_model_validation.py \
+            --model-version ${{ needs.model-training.outputs.model-version }} \
+            --performance-threshold 0.85
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+
+      - name: 🔍 Model bias and fairness check
+        run: |
+          python tests/test_model_fairness.py
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+
+      - name: 🎯 A/B testing preparation
+        if: steps.validate.outputs.passed == 'true'
+        run: |
+          python src/models/prepare_ab_test.py \
+            --challenger-version ${{ needs.model-training.outputs.model-version }}
+
+  # Job 4: Model Deployment Decision
+  deployment-decision:
+    runs-on: ubuntu-latest
+    name: 🤔 Deployment Decision
+    needs: [model-training, model-validation]
+    if: needs.model-validation.outputs.validation-passed == 'true'
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: 🤖 Compare with production model
+        id: compare
+        run: |
+          python src/models/compare_models.py \
+            --current-model production \
+            --new-model ${{ needs.model-training.outputs.model-version }}
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+
+      - name: 📊 Generate comparison report
+        run: |
+          python src/reports/model_comparison_report.py
+
+      - name: 📤 Upload comparison report
+        uses: actions/upload-artifact@v3
+        with:
+          name: model-comparison-report
+          path: reports/model_comparison.html
+
+      - name: 🚀 Auto-deploy if significantly better
+        if: steps.compare.outputs.improvement > 0.05
+        run: |
+          echo "New model shows significant improvement!"
+          echo "Triggering deployment pipeline..."
+
+          # Trigger deployment workflow
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/actions/workflows/deploy-model.yml/dispatches \
+            -d '{"ref":"main","inputs":{"model_version":"${{ needs.model-training.outputs.model-version }}"}}'
+
+  # Job 5: Monitoring Setup
+  setup-monitoring:
+    runs-on: ubuntu-latest
+    name: 📊 Setup Model Monitoring
+    needs: [model-training, model-validation]
+    if: needs.model-validation.outputs.validation-passed == 'true'
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📊 Update monitoring dashboards
+        run: |
+          python src/monitoring/update_dashboards.py \
+            --model-version ${{ needs.model-training.outputs.model-version }}
+
+      - name: 🚨 Setup model performance alerts
+        run: |
+          python src/monitoring/setup_alerts.py \
+            --model-version ${{ needs.model-training.outputs.model-version }}
+
+      - name: 📈 Initialize drift detection
+        run: |
+          python src/monitoring/setup_drift_detection.py \
+            --model-version ${{ needs.model-training.outputs.model-version }}
+
+  # Job 6: Notification and Reporting
+  notification:
+    runs-on: ubuntu-latest
+    name: 📢 Notification
+    needs:
+      [data-validation, model-training, model-validation, deployment-decision]
+    if: always()
+
+    steps:
+      - name: 📧 Send training summary
+        run: |
+          echo "Model retraining completed!"
+          echo "Data validation: ${{ needs.data-validation.outputs.data-valid }}"
+          echo "Model version: ${{ needs.model-training.outputs.model-version }}"
+          echo "Validation passed: ${{ needs.model-validation.outputs.validation-passed }}"
+
+          # Here you would integrate with your notification system
+          # Examples:
+          # - Slack notification
+          # - Email notification
+          # - Teams notification
+          # - Dashboard update
+
+      - name: 📊 Update training log
+        run: |
+          echo "$(date): Retraining completed for version ${{ needs.model-training.outputs.model-version }}" >> training_log.txt
+          # In real implementation, this would go to a proper logging system

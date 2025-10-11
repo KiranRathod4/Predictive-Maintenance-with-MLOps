@@ -1,0 +1,176 @@
+/* Add these to your existing styles.css */
+
+/* Loading states */
+.loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: 'Loading...';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    z-index: 1000;
+}
+
+/* Error and success messages */
+.error-message {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    padding: 12px;
+    border-radius: 4px;
+    margin: 10px 0;
+}
+
+.success-message {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #16a34a;
+    padding: 12px;
+    border-radius: 4px;
+    margin: 10px 0;
+}
+
+/* Form states */
+.form-loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Result cards */
+.result-card {
+    background: #1f2937;
+    border: 1px solid #374151;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.result-item {
+    text-align: center;
+}
+
+.result-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #3b82f6;
+}
+
+.result-label {
+    color: #9ca3af;
+    font-size: 0.9rem;
+}
+
+.result-details {
+    border-top: 1px solid #374151;
+    padding-top: 15px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #374151;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+/* JSON viewer */
+.json-viewer {
+    background: #111827;
+    border: 1px solid #374151;
+    border-radius: 4px;
+    padding: 15px;
+    margin-top: 10px;
+    font-family: monospace;
+    font-size: 0.9rem;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.json-viewer.hidden {
+    display: none;
+}
+
+/* Health status */
+.health-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.health-dot.healthy {
+    background: #10b981;
+}
+
+.health-dot.unhealthy {
+    background: #ef4444;
+}
+
+.status-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-right: 6px;
+}
+
+.status.healthy {
+    color: #10b981;
+}
+
+.status.unhealthy {
+    color: #ef4444;
+}
+
+.status-degraded {
+    color: #f59e0b;
+}
+
+.status-dot.healthy {
+    background: #10b981;
+}
+
+.status-dot.unhealthy {
+    background: #ef4444;
+}
+
+.status-dot.degraded {
+    background: #f59e0b;
+}
+
+/* File upload */
+.dragover {
+    border-color: #3b82f6 !important;
+    background: #1e40af20 !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .result-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .detail-row {
+        flex-direction: column;
+        gap: 5px;
+    }
+}

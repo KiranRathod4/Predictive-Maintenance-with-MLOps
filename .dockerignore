@@ -1,0 +1,78 @@
+# .dockerignore
+# Files and directories to exclude from Docker build context
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+README.md
+docs/
+*.md
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+tmp/
+temp/
+.cache/
+
+# DVC (exclude cache, keep .dvc files)
+.dvc/cache/
+.dvc/tmp/
+
+# MLflow runs (will be mounted as volumes)
+mlruns/
+
+# Jupyter notebooks
+*.ipynb
+.ipynb_checkpoints/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Large data files (mount as volumes instead)
+data/raw/*
+!data/raw/.gitkeep
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Docker files (avoid recursion)
+Dockerfile*
+docker-compose*.yml
+.dockerignore

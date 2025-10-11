@@ -1,0 +1,48 @@
+# Dockerfile.train
+# Container for model training and experimentation
+
+FROM python:3.11-slim
+
+# Set labels
+LABEL maintainer="your-email@example.com"
+LABEL description="Predictive Maintenance Training Container"
+LABEL purpose="model-training"
+
+# Environment variables
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    DEBIAN_FRONTEND=noninteractive
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create user for training
+RUN groupadd -r mluser && useradd -r -g mluser mluser
+
+# Set work directory
+WORKDIR /workspace
+
+# Copy requirements and install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy project structure
+COPY . .
+
+# Create necessary directories with proper permissions
+RUN mkdir -p models reports/figures data/processed data/features logs && \
+    chown -R mluser:mluser /workspace
+
+# Switch to non-root user
+USER mluser
+
+# Set environment for MLflow
+ENV MLFLOW_TRACKING_URI=http://mlflow:5000
+
+# Default command (can be overridden)
+CMD ["python", "src/models/train.py"]

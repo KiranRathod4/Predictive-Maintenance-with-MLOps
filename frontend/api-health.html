@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Inter%3Awght%40400%3B500%3B700%3B900&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<title>API Health - Predictive Maintenance</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#1173d4",
+            "background-light": "#f6f7f8",
+            "background-dark": "#101922",
+          },
+          fontFamily: {
+            "display": ["Inter"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-200">
+<div class="relative flex h-auto min-h-screen w-full flex-col">
+<div class="flex h-full grow flex-col">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-slate-200/80 dark:border-slate-800/80 px-10 py-3">
+<div class="flex items-center gap-4">
+<a href="index.html" class="flex items-center gap-4">
+<div class="size-8 text-primary">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M39.5563 34.1455V13.8546C39.5563 15.708 36.8773 17.3437 32.7927 18.3189C30.2914 18.916 27.263 19.2655 24 19.2655C20.737 19.2655 17.7086 18.916 15.2073 18.3189C11.1227 17.3437 8.44365 15.708 8.44365 13.8546V34.1455C8.44365 35.9988 11.1227 37.6346 15.2073 38.6098C17.7086 39.2069 20.737 39.5564 24 39.5564C27.263 39.5564 30.2914 39.2069 32.7927 38.6098C36.8773 37.6346 39.5563 35.9988 39.5563 34.1455Z" fill="currentColor"></path>
+<path clip-rule="evenodd" d="M10.4485 13.8519C10.4749 13.9271 10.6203 14.246 11.379 14.7361C12.298 15.3298 13.7492 15.9145 15.6717 16.3735C18.0007 16.9296 20.8712 17.2655 24 17.2655C27.1288 17.2655 29.9993 16.9296 32.3283 16.3735C34.2508 15.9145 35.702 15.3298 36.621 14.7361C37.3796 14.246 37.5251 13.9271 37.5515 13.8519C37.5287 13.7876 37.4333 13.5973 37.0635 13.2931C36.5266 12.8516 35.6288 12.3647 34.343 11.9175C31.79 11.0295 28.1333 10.4437 24 10.4437C19.8667 10.4437 16.2099 11.0295 13.657 11.9175C12.3712 12.3647 11.4734 12.8516 10.9365 13.2931C10.5667 13.5973 10.4713 13.7876 10.4485 13.8519ZM37.5563 18.7877C36.3176 19.3925 34.8502 19.8839 33.2571 20.2642C30.5836 20.9025 27.3973 21.2655 24 21.2655C20.6027 21.2655 17.4164 20.9025 14.7429 20.2642C13.1498 19.8839 11.6824 19.3925 10.4436 18.7877V34.1275C10.4515 34.1545 10.5427 34.4867 11.379 35.027C12.298 35.6207 13.7492 36.2054 15.6717 36.6644C18.0007 37.2205 20.8712 37.5564 24 37.5564C27.1288 37.5564 29.9993 37.2205 32.3283 36.6644C34.2508 36.2054 35.702 35.6207 36.621 35.027C37.4573 34.4867 37.5485 34.1546 37.5563 34.1275V18.7877ZM41.5563 13.8546V34.1455C41.5563 36.1078 40.158 37.5042 38.7915 38.3869C37.3498 39.3182 35.4192 40.0389 33.2571 40.5551C30.5836 41.1934 27.3973 41.5564 24 41.5564C20.6027 41.5564 17.4164 41.1934 14.7429 40.5551C12.5808 40.0389 10.6502 39.3182 9.20848 38.3869C7.84205 37.5042 6.44365 36.1078 6.44365 34.1455L6.44365 13.8546C6.44365 12.2684 7.37223 11.0454 8.39581 10.2036C9.43325 9.3505 10.8137 8.67141 12.343 8.13948C15.4203 7.06909 19.5418 6.44366 24 6.44366C28.4582 6.44366 32.5797 7.06909 35.657 8.13948C37.1863 8.67141 38.5667 9.3505 39.6042 10.2036C40.6278 11.0454 41.5563 12.2684 41.5563 13.8546Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h1 class="text-xl font-bold text-slate-900 dark:text-white">Predictive Maintenance</h1>
+</a>
+</div>
+<div class="flex flex-1 justify-end items-center gap-8">
+<nav class="flex items-center gap-6">
+<a class="text-sm font-medium hover:text-primary transition-colors" href="index.html">Overview</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="model-metrics.html">Model Health</a>
+<a class="text-sm font-bold text-primary" href="api-health.html">API Health</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="predict-rul.html">Data Quality</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Alerts</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="mlflow.html">Settings</a>
+</nav>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBs5KjMuQaZp7X4X1rTLEeioJPzXcpc8-iMQ2JU1G8vS6HcB3xrmOlPaPBKN7k_sN_NFDkVMjtdNin03Nlq02EyzaWCYQdjXDBoLT5ys3iJQMILZb015maz8sTO99I7yoVAqya5bcWA9J2AzBTXHQP-Fh7dpK-7HSEvRvLPi2Olwtkc9-UEeBHihYyVOwvBI6jjpRe27ueh2qH3BGnen3kZZZFMoLj-xwckNO66GPWfGocSKES04Ij8i4ZUmR-05qTI9B6rvKT1sJw");'></div>
+</div>
+</header>
+<main class="flex-1 px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col gap-12" id="api-health-container">
+<div class="flex flex-col gap-2">
+<h1 class="text-3xl font-bold text-slate-900 dark:text-white">API Health</h1>
+<p class="text-slate-500 dark:text-slate-400">Monitor the health and performance of the API services.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="bg-white dark:bg-slate-900/40 p-6 rounded-lg border border-slate-200 dark:border-slate-800 flex flex-col gap-2">
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400">API Uptime</p>
+<p class="text-3xl font-bold text-slate-900 dark:text-white">99.9%</p>
+</div>
+<div class="bg-white dark:bg-slate-900/40 p-6 rounded-lg border border-slate-200 dark:border-slate-800 flex flex-col gap-2">
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400">Last Loaded Model Time</p>
+<p class="text-3xl font-bold text-slate-900 dark:text-white">2023-11-20 14:30:00</p>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<h2 class="text-2xl font-bold text-slate-900 dark:text-white">Service Status</h2>
+<div class="overflow-x-auto">
+<div class="border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden">
+<table class="w-full">
+<thead class="bg-slate-50 dark:bg-slate-900/70">
+<tr>
+<th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Service</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-200 dark:divide-slate-800 bg-white dark:bg-slate-900/40">
+<tr>
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900 dark:text-white">Prediction Service</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm">
+<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300">
+<span class="size-2 bg-green-500 rounded-full"></span>
+                            Healthy
+                          </span>
+</td>
+</tr>
+<tr>
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900 dark:text-white">Data Ingestion Service</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm">
+<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300">
+<span class="size-2 bg-green-500 rounded-full"></span>
+                            Healthy
+                          </span>
+</td>
+</tr>
+<tr>
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900 dark:text-white">Model Training Service</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm">
+<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300">
+<span class="size-2 bg-red-500 rounded-full"></span>
+                            Unhealthy
+                          </span>
+</td>
+</tr>
+<tr>
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900 dark:text-white">Alerting Service</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm">
+<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300">
+<span class="size-2 bg-green-500 rounded-full"></span>
+                            Healthy
+                          </span>
+</td>
+</tr>
+<tr>
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900 dark:text-white">Logging Service</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm">
+<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300">
+<span class="size-2 bg-green-500 rounded-full"></span>
+                            Healthy
+                          </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<!-- Quick Links Section -->
+<div class="mt-12">
+<h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">Quick Links</h2>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<a href="http://localhost:8000/docs" target="_blank" class="bg-white dark:bg-slate-900/40 p-6 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-primary transition-colors group">
+<div class="flex items-center justify-between">
+<span class="text-lg font-medium text-slate-900 dark:text-white group-hover:text-primary transition-colors">API Documentation</span>
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">open_in_new</span>
+</div>
+</a>
+<a href="http://localhost:5000" target="_blank" class="bg-white dark:bg-slate-900/40 p-6 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-primary transition-colors group">
+<div class="flex items-center justify-between">
+<span class="text-lg font-medium text-slate-900 dark:text-white group-hover:text-primary transition-colors">MLflow</span>
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">open_in_new</span>
+</div>
+</a>
+<a href="http://localhost:9090" target="_blank" class="bg-white dark:bg-slate-900/40 p-6 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-primary transition-colors group">
+<div class="flex items-center justify-between">
+<span class="text-lg font-medium text-slate-900 dark:text-white group-hover:text-primary transition-colors">Prometheus</span>
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">open_in_new</span>
+</div>
+</a>
+<a href="http://localhost:3000" target="_blank" class="bg-white dark:bg-slate-900/40 p-6 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-primary transition-colors group">
+<div class="flex items-center justify-between">
+<span class="text-lg font-medium text-slate-900 dark:text-white group-hover:text-primary transition-colors">Grafana</span>
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">open_in_new</span>
+</div>
+</a>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+<script src="services/api.js"></script>
+<script src="script.js"></script>
+</body>
+</html> 

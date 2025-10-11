@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Predictive Maintenance - Model Metrics</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    "primary": "#1173d4",
+                    "background-light": "#f6f7f8",
+                    "background-dark": "#101922",
+                },
+                fontFamily: {
+                    "display": ["Inter"]
+                },
+                borderRadius: {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+                },
+            },
+        },
+    }
+</script>
+<style>
+    [x-cloak] {
+        display: none !important;
+    }
+</style>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-black dark:text-white">
+<div class="flex min-h-screen">
+<aside class="w-64 bg-background-light/50 dark:bg-background-dark/50 p-4 flex flex-col justify-between">
+<div>
+<a href="index.html" class="flex items-center gap-4 mb-6">
+    <div class="text-primary w-8 h-8">
+        <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <path d="M39.5563 34.1455V13.8546C39.5563 15.708 36.8773 17.3437 32.7927 18.3189C30.2914 18.916 27.263 19.2655 24 19.2655C20.737 19.2655 17.7086 18.916 15.2073 18.3189C11.1227 17.3437 8.44365 15.708 8.44365 13.8546V34.1455C8.44365 35.9988 11.1227 37.6346 15.2073 38.6098C17.7086 39.2069 20.737 39.5564 24 39.5564C27.263 39.5564 30.2914 39.2069 32.7927 38.6098C36.8773 37.6346 39.5563 35.9988 39.5563 34.1455Z" fill="currentColor"></path>
+            <path clip-rule="evenodd" d="M10.4485 13.8519C10.4749 13.9271 10.6203 14.246 11.379 14.7361C12.298 15.3298 13.7492 15.9145 15.6717 16.3735C18.0007 16.9296 20.8712 17.2655 24 17.2655C27.1288 17.2655 29.9993 16.9296 32.3283 16.3735C34.2508 15.9145 35.702 15.3298 36.621 14.7361C37.3796 14.246 37.5251 13.9271 37.5515 13.8519C37.5287 13.7876 37.4333 13.5973 37.0635 13.2931C36.5266 12.8516 35.6288 12.3647 34.343 11.9175C31.79 11.0295 28.1333 10.4437 24 10.4437C19.8667 10.4437 16.2099 11.0295 13.657 11.9175C12.3712 12.3647 11.4734 12.8516 10.9365 13.2931C10.5667 13.5973 10.4713 13.7876 10.4485 13.8519ZM37.5563 18.7877C36.3176 19.3925 34.8502 19.8839 33.2571 20.2642C30.5836 20.9025 27.3973 21.2655 24 21.2655C20.6027 21.2655 17.4164 20.9025 14.7429 20.2642C13.1498 19.8839 11.6824 19.3925 10.4436 18.7877V34.1275C10.4515 34.1545 10.5427 34.4867 11.379 35.027C12.298 35.6207 13.7492 36.2054 15.6717 36.6644C18.0007 37.2205 20.8712 37.5564 24 37.5564C27.1288 37.5564 29.9993 37.2205 32.3283 36.6644C34.2508 36.2054 35.702 35.6207 36.621 35.027C37.4573 34.4867 37.5485 34.1546 37.5563 34.1275V18.7877ZM41.5563 13.8546V34.1455C41.5563 36.1078 40.158 37.5042 38.7915 38.3869C37.3498 39.3182 35.4192 40.0389 33.2571 40.5551C30.5836 41.1934 27.3973 41.5564 24 41.5564C20.6027 41.5564 17.4164 41.1934 14.7429 40.5551C12.5808 40.0389 10.6502 39.3182 9.20848 38.3869C7.84205 37.5042 6.44365 36.1078 6.44365 34.1455L6.44365 13.8546C6.44365 12.2684 7.37223 11.0454 8.39581 10.2036C9.43325 9.3505 10.8137 8.67141 12.343 8.13948C15.4203 7.06909 19.5418 6.44366 24 6.44366C28.4582 6.44366 32.5797 7.06909 35.657 8.13948C37.1863 8.67141 38.5667 9.3505 39.6042 10.2036C40.6278 11.0454 41.5563 12.2684 41.5563 13.8546Z" fill="currentColor" fill-rule="evenodd"></path>
+        </svg>
+    </div>
+    <h1 class="text-xl font-bold text-gray-900 dark:text-white">Predictive Maintenance</h1>
+</a>
+<nav class="flex flex-col gap-2">
+<a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/20 dark:hover:bg-primary/30 nav-item">
+<svg class="w-6 h-6 text-gray-500 dark:text-gray-400" fill="currentColor" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 13h6v-2H4v2zm0 4h6v-2H4v2zm0-8h6V7H4v2zm10 2v-2l-4-3.99L10 6v2.5l4 4-4 4V19l4-3.99L14 16v-2h6v-2h-6z"></path>
+</svg>
+<span class="font-medium text-sm">Home</span>
+</a>
+<a href="predict-rul.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/20 dark:hover:bg-primary/30 nav-item">
+<svg class="w-6 h-6 text-gray-500 dark:text-gray-400" fill="currentColor" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"></path>
+</svg>
+<span class="font-medium text-sm">Predict Engine RUL</span>
+</a>
+<a href="model-metrics.html" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary text-white nav-item">
+<svg class="w-6 h-6" fill="currentColor" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M22 2H2v20h20V2zM8 18H4V4h4v14zm6 0h-4V4h4v14zm6 0h-4V4h4v14z"></path>
+</svg>
+<span class="font-medium text-sm">Model Metrics</span>
+</a>
+<a href="mlflow.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/20 dark:hover:bg-primary/30 nav-item">
+<svg class="w-6 h-6 text-gray-500 dark:text-gray-400" fill="currentColor" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"></path>
+</svg>
+<span class="font-medium text-sm">MLflow Experiments</span>
+</a>
+<a href="api-health.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/20 dark:hover:bg-primary/30 nav-item">
+<svg class="w-6 h-6 text-gray-500 dark:text-gray-400" fill="currentColor" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+</svg>
+<span class="font-medium text-sm">API Health</span>
+</a>
+</nav>
+</div>
+<div>
+<div class="quick-links">
+<h3 class="text-sm font-semibold text-gray-500 mb-3">Quick Links</h3>
+<div class="space-y-2">
+<a href="http://localhost:8000/docs" target="_blank" class="flex items-center text-gray-600 hover:text-blue-600 text-sm">
+<svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"></path>
+</svg>
+API Documentation
+</a>
+<a href="http://localhost:5000" target="_blank" class="flex items-center text-gray-600 hover:text-blue-600 text-sm">
+<svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+<path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"></path>
+</svg>
+MLflow
+</a>
+<a href="http://localhost:9090" target="_blank" class="flex items-center text-gray-600 hover:text-blue-600 text-sm">
+<svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+<path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.09-4-4L2 17.08l1.5 1.41z"></path>
+</svg>  
+Prometheus
+</a>
+<a href="http://localhost:3000" target="_blank" class="flex items-center text-gray-600 hover:text-blue-600 text-sm">
+<svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+<path d="M22 2H2v20h20V2zM8 18H4V4h4v14zm6 0h-4V4h4v14zm6 0h-4V4h4v14z"></path>
+</svg>
+Grafana
+</a>
+</div>
+</div>
+</div>
+</aside>
+<main class="flex-1 p-8">
+<div class="max-w-7xl mx-auto">
+<div class="mb-8">
+<h1 class="text-3xl font-bold text-gray-900 dark:text-white">Model Metrics</h1>
+<p class="mt-1 text-gray-600 dark:text-gray-400">Detailed performance metrics for the selected predictive model.</p>
+</div>
+<div id="model-metrics-container" class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+<div class="lg:col-span-2 space-y-8">
+<div class="rounded-xl border border-primary/20 dark:border-primary/30 bg-white/50 dark:bg-black/10">
+<div class="p-6">
+<h3 class="text-lg font-semibold text-black dark:text-white">Model Information</h3>
+</div>
+<div class="border-t border-primary/20 dark:border-primary/30 p-6 space-y-4 text-sm">
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+<dt class="font-medium text-black/60 dark:text-white/60">Model Type</dt>
+<dd class="sm:col-span-2 text-black dark:text-white">Gradient Boosting</dd>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+<dt class="font-medium text-black/60 dark:text-white/60">Hyperparameters</dt>
+<dd class="sm:col-span-2">
+<button onclick="toggleJsonView()" class="flex items-center text-primary hover:underline focus:outline-none">
+<span>View JSON</span>
+<span class="material-symbols-outlined text-lg transition-transform">expand_more</span>
+</button>
+<div id="json-viewer" class="hidden mt-2 p-4 rounded-lg bg-background-light dark:bg-background-dark text-xs text-black/80 dark:text-white/80 overflow-auto">
+<pre>{
+  "n_estimators": 100,
+  "learning_rate": 0.1,
+  "max_depth": 3
+}</pre>
+</div>
+</dd>
+</div>
+</div>
+</div>
+<div class="rounded-xl border border-primary/20 dark:border-primary/30 bg-white/50 dark:bg-black/10">
+<div class="p-6">
+<h3 class="text-lg font-semibold text-black dark:text-white">Validation Metrics</h3>
+</div>
+<div class="border-t border-primary/20 dark:border-primary/30 divide-y divide-primary/20 dark:divide-primary/30 text-sm">
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-2 p-4">
+<dt class="font-medium text-black/60 dark:text-white/60">RMSE</dt>
+<dd class="sm:col-span-2 text-black dark:text-white">0.05</dd>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-2 p-4">
+<dt class="font-medium text-black/60 dark:text-white/60">R²</dt>
+<dd class="sm:col-span-2 text-black dark:text-white">0.85</dd>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-2 p-4">
+<dt class="font-medium text-black/60 dark:text-white/60">MAE</dt>
+<dd class="sm:col-span-2 text-black dark:text-white">0.03</dd>
+</div>
+</div>
+</div>
+</div>
+<div class="lg:col-span-1">
+<div class="rounded-xl border border-primary/20 dark:border-primary/30 bg-white/50 dark:bg-black/10 p-6">
+<h3 class="text-lg font-semibold text-black dark:text-white">Overall Performance</h3>
+<p class="mt-4 text-3xl font-bold tracking-tight text-black dark:text-white">0.85</p>
+<div class="mt-1 flex items-center gap-1">
+<p class="text-sm text-black/60 dark:text-white/60">Last 30 Days</p>
+<p class="text-sm font-medium text-green-500">+5%</p>
+</div>
+<div class="mt-6">
+<svg fill="none" height="150" viewBox="0 0 472 150" width="100%" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25" stroke="#1173d4" stroke-linecap="round" stroke-width="2"></path>
+<path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25V150H0V109Z" fill="url(#perf-chart-gradient)"></path>
+<defs>
+<linearGradient gradientUnits="userSpaceOnUse" id="perf-chart-gradient" x1="236" x2="236" y1="1" y2="150">
+<stop stop-color="#1173d4" stop-opacity="0.2"></stop>
+<stop offset="1" stop-color="#1173d4" stop-opacity="0"></stop>
+</linearGradient>
+</defs>
+</svg>
+<div class="flex justify-between text-xs font-medium text-black/50 dark:text-white/50 mt-2">
+<span>Day 1</span>
+<span>Day 15</span>
+<span>Day 30</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<script src="services/api.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

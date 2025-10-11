@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Predictive Maintenance - MLflow Experiments</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#1173d4",
+            "background-light": "#f6f7f8",
+            "background-dark": "#101922",
+          },
+          fontFamily: {
+            "display": ["Inter"]
+          },
+          borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+        },
+      },
+    }
+</script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#101922] dark:text-[#f6f7f8]">
+<div class="flex min-h-screen">
+<aside class="w-64 bg-background-light/50 dark:bg-background-dark/50 p-4 flex flex-col justify-between">
+<div>
+<a href="index.html" class="flex items-center gap-4 mb-6">
+    <div class="text-primary w-8 h-8">
+        <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z" fill="currentColor"></path>
+        </svg>
+    </div>
+    <h1 class="text-xl font-bold text-gray-900 dark:text-white">Predictive Maintenance</h1>
+</a>
+<nav class="flex flex-col gap-2">
+<a href="index.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/20 dark:hover:bg-primary/30 nav-item">
+<svg class="w-6 h-6 text-gray-500 dark:text-gray-400" fill="currentColor" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 13h6v-2H4v2zm0 4h6v-2H4v2zm0-8h6V7H4v2zm10 2v-2l-4-3.99L10 6v2.5l4 4-4 4V19l4-3.99L14 16v-2h6v-2h-6z"></path>
+</svg>
+<span class="font-medium text-sm">Home</span>
+</a>
+<a href="predict-rul.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/20 dark:hover:bg-primary/30 nav-item">
+<svg class="w-6 h-6 text-gray-500 dark:text-gray-400" fill="currentColor" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"></path>
+</svg>
+<span class="font-medium text-sm">Predict Engine RUL</span>
+</a>
+<a href="model-metrics.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/20 dark:hover:bg-primary/30 nav-item">
+<svg class="w-6 h-6 text-gray-500 dark:text-gray-400" fill="currentColor" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M22 2H2v20h20V2zM8 18H4V4h4v14zm6 0h-4V4h4v14zm6 0h-4V4h4v14z"></path>
+</svg>
+<span class="font-medium text-sm">Model Metrics</span>
+</a>
+<a href="mlflow.html" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary text-white nav-item">
+<svg class="w-6 h-6" fill="currentColor" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"></path>
+</svg>
+<span class="font-medium text-sm">MLflow Experiments</span>
+</a>
+<a href="api-health.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/20 dark:hover:bg-primary/30 nav-item">
+<svg class="w-6 h-6 text-gray-500 dark:text-gray-400" fill="currentColor" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+</svg>
+<span class="font-medium text-sm">API Health</span>
+</a>
+</nav>
+</div>
+<div>
+<div class="quick-links mt-8">
+<h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-3">Quick Links</h3>
+<div class="space-y-2">
+<a href="http://localhost:8000/docs" target="_blank" class="flex items-center text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 text-sm">
+<svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"></path>
+</svg>
+API Documentation
+</a>
+<a href="http://localhost:5000" target="_blank" class="flex items-center text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 text-sm">
+<svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+<path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"></path>
+</svg>
+MLflow
+</a>
+<a href="http://localhost:9090" target="_blank" class="flex items-center text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 text-sm">
+<svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+<path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.09-4-4L2 17.08l1.5 1.41z"></path>
+</svg>  
+Prometheus
+</a>
+<a href="http://localhost:3000" target="_blank" class="flex items-center text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 text-sm">
+<svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+<path d="M22 2H2v20h20V2zM8 18H4V4h4v14zm6 0h-4V4h4v14zm6 0h-4V4h4v14z"></path>
+</svg>
+Grafana
+</a>
+</div>
+</div>
+</div>
+</aside>
+
+<main class="flex-1 p-8">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+<div>
+<h2 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">MLflow Experiments</h2>
+<p class="mt-2 text-gray-600 dark:text-gray-400">Track and manage your machine learning experiments</p>
+</div>
+<div class="flex items-center gap-2">
+<a href="http://localhost:5000" target="_blank" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined text-lg">open_in_new</span>
+Open in Full Screen
+</a>
+</div>
+</div>
+
+<div class="bg-white/5 dark:bg-black/10 rounded-xl shadow-lg border border-black/5 dark:border-white/5 overflow-hidden">
+<div class="p-6 bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-800">
+<p class="text-sm text-gray-600 dark:text-gray-400">
+<span class="material-symbols-outlined text-base align-middle mr-1">info</span>
+The MLflow Tracking UI is embedded below. You can interact with it directly to manage your experiments, runs, and models.
+</p>
+<p class="text-sm text-gray-500 dark:text-gray-500 mt-2">
+If the frame doesn't load, ensure the MLflow tracking server is running on 
+<a class="text-primary font-medium hover:underline" href="http://localhost:5000" target="_blank">http://localhost:5000</a>
+</p>
+</div>
+
+<div class="relative w-full bg-white dark:bg-gray-900" style="height: calc(100vh - 300px); min-height: 600px;">
+<div id="mlflow-loading" class="absolute inset-0 flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+<div class="text-center">
+<div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+<p class="text-gray-600 dark:text-gray-400">Loading MLflow UI...</p>
+<p class="text-sm text-gray-500 dark:text-gray-500 mt-2">Make sure MLflow server is running on port 5000</p>
+</div>
+</div>
+<iframe 
+id="mlflow-iframe"
+class="w-full h-full border-0" 
+src="http://localhost:5000" 
+title="MLflow UI"
+sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-top-navigation"
+onload="document.getElementById('mlflow-loading').style.display='none'"
+onerror="document.getElementById('mlflow-loading').innerHTML='<div class=\'text-center\'><p class=\'text-red-600\'>Failed to load MLflow. Please ensure MLflow server is running.</p><a href=\'http://localhost:5000\' target=\'_blank\' class=\'text-primary hover:underline\'>Open MLflow in new tab</a></div>'"
+>
+</iframe>
+</div>
+</div>
+
+<div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="bg-white dark:bg-gray-900/50 p-4 rounded-lg border border-gray-200 dark:border-gray-800">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-3xl">science</span>
+<div>
+<p class="text-sm text-gray-500 dark:text-gray-400">Active Experiments</p>
+<p class="text-2xl font-bold text-gray-900 dark:text-white">-</p>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-gray-900/50 p-4 rounded-lg border border-gray-200 dark:border-gray-800">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-3xl">play_arrow</span>
+<div>
+<p class="text-sm text-gray-500 dark:text-gray-400">Total Runs</p>
+<p class="text-2xl font-bold text-gray-900 dark:text-white">-</p>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-gray-900/50 p-4 rounded-lg border border-gray-200 dark:border-gray-800">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-3xl">deployed_code</span>
+<div>
+<p class="text-sm text-gray-500 dark:text-gray-400">Registered Models</p>
+<p class="text-2xl font-bold text-gray-900 dark:text-white">-</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+<script src="services/api.js"></script>
+<script src="script.js"></script>
+<script>
+// Check MLflow server status
+async function checkMLflowServer() {
+    try {
+        const response = await fetch('http://localhost:5000/health', { mode: 'no-cors' });
+        console.log('MLflow server is running');
+    } catch (error) {
+        console.warn('MLflow server may not be running:', error);
+        setTimeout(() => {
+            const iframe = document.getElementById('mlflow-iframe');
+            if (iframe && iframe.contentDocument === null) {
+                document.getElementById('mlflow-loading').innerHTML = `
+                    <div class="text-center p-8">
+                        <span class="material-symbols-outlined text-6xl text-red-500 mb-4">error</span>
+                        <p class="text-red-600 dark:text-red-400 text-lg font-semibold mb-2">MLflow Server Not Running</p>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">Start MLflow server with:</p>
+                        <code class="bg-gray-800 text-green-400 px-4 py-2 rounded block mb-4">mlflow server --host 127.0.0.1 --port 5000</code>
+                        <a href="http://localhost:5000" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90">
+                            <span class="material-symbols-outlined">open_in_new</span>
+                            Try Opening MLflow
+                        </a>
+                    </div>
+                `;
+            }
+        }, 3000);
+    }
+}
+
+checkMLflowServer();
+</script>
+</body>
+</html>
