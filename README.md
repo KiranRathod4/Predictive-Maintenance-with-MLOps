@@ -11,136 +11,243 @@ Traditional preventive maintenance (fixed schedules) is inefficient.
 
 ## 2. Data Sources
 - [NASA Turbofan Engine Degradation Dataset (CMAPSS)](https://data.nasa.gov/)  
-- [PHM Society Data Challenge Datasets](https://www.phmsociety.org/)  
-- Simulated IoT sensor streams (Kafka / IoT Hub)
+
+
+The project is built with:
+
+*  **Machine Learning (Random Forest Regressor)**
+*  **FastAPI backend** for serving model predictions
+*  **Interactive HTML + JavaScript frontend** for real-time prediction and dashboard
+*  **MLflow** for model tracking, experiment management, and versioning
+*  **Modular MLOps-ready architecture** for scalability and CI/CD integration
 
 ---
 
-## 3. End-to-End Tech Stack
+##  Why I Built This Project
 
-| Stage              | Tools / Tech |
-|--------------------|--------------|
-| **Data Ingestion** | Apache Kafka (streaming), Airflow (batch pipelines) |
-| **Data Storage**   | AWS S3 / GCS for raw data, PostgreSQL for metadata |
-| **Data Versioning**| DVC (Data Version Control) |
-| **Processing & Features** | Pandas, PySpark, Scikit-learn, Feature Store (Feast) |
-| **Modeling**       | Scikit-learn, XGBoost, PyTorch (LSTMs for time-series) |
-| **Experiment Tracking** | MLflow |
-| **Model Registry** | MLflow Model Registry |
-| **Deployment**     | FastAPI + Docker + Kubernetes (EKS/GKE) |
-| **CI/CD**          | GitHub Actions + Terraform for infra-as-code |
-| **Monitoring**     | Evidently AI (drift detection), Prometheus + Grafana |
-| **Logging**        | ELK Stack (Elasticsearch, Logstash, Kibana) |
+Predictive maintenance is one of the most impactful applications of AI in the industry.
+Through this project, I wanted to:
+
+* Apply **data science + MLOps concepts** in a real-world use case.
+* Learn how to **serve ML models in production** using FastAPI.
+* Build a **user-friendly frontend** to visualize predictions.
+* Integrate **MLflow** to track and compare model performance.
+* Understand the **end-to-end lifecycle** — from data to deployment.
 
 ---
 
-## 4. System Architecture
+## 🧰 Tech Stack
+
+| Layer                    | Tools / Technologies Used               |
+| ------------------------ | --------------------------------------- |
+| **Language**             | Python, JavaScript, HTML, CSS           |
+| **Backend Framework**    | FastAPI                                 |
+| **Frontend**             | TailwindCSS, Vanilla JS                 |
+| **ML & Data Science**    | Pandas, NumPy, Scikit-learn, Matplotlib |
+| **Experiment Tracking**  | MLflow                                  |
+| **Version Control**      | Git, GitHub                             |
+| **Deployment Ready For** | Render / Railway / AWS EC2              |
+| **Database (Optional)**  | SQLite (for MLflow tracking)            |
+
+---
+
+##  Project Architecture
+
 ```
-
-IoT Sensors → Kafka → Data Lake (S3/GCS)
-
-Airflow ETL → Feature Store (Feast)
-
-ML Model Training Pipeline → MLflow (Experiments + Registry)
-
-Client Request → FastAPI → Load Model → Predict → JSON Response
-
-CI/CD triggers build → Docker image → Deploy to Kubernetes
-
-Prediction Service (FastAPI) → Accessible via REST/gRPC
-
-Monitoring Layer: Drift detection + error logs + performance dashboard
-
-```
-
----
-
-## 5. ML Pipeline
-
-### 🔹 Preprocessing
-- Handle missing sensor readings  
-- Normalize signals  
-- Extract rolling statistics (moving avg, variance, FFT features)  
-
-### 🔹 Feature Engineering
-- Time-to-failure (label engineering)  
-- Sensor correlation features  
-
-### 🔹 Modeling
-- **Baseline:** Random Forest, XGBoost  
-- **Advanced:** LSTM/GRU for sequential sensor data  
-- **Ensemble:** Blend tree + deep learning models  
-
-### 🔹 Evaluation
-- Metrics: F1-score, Precision@K (early warnings), ROC-AUC  
-- Cost analysis: savings vs false alarms  
-
----
-
-## 6. Deployment & MLOps
-
-### ⚙️ CI/CD
-- On code commit → tests run → retrain if new data → deploy updated container automatically.  
-
-### 🟢 Canary Deployment
-- Gradual rollout of new model to 10% of machines, monitor performance, then expand.  
-
-### 📊 Monitoring
-- Track sensor distribution (drift detection)  
-- Track failure prediction accuracy in real world  
-- Auto-trigger retraining if drift threshold exceeded  
-
----
-
-## 7. Deliverables (Resume-Ready Highlights)
-
-- ✅ Built **end-to-end Predictive Maintenance ML system** handling streaming IoT sensor data.  
-- ✅ Deployed scalable **FastAPI microservice** with **Docker + Kubernetes (AWS)**.  
-- ✅ Implemented **MLOps (CI/CD, model registry, drift detection, automated retraining)** using MLflow, Evidently AI, Airflow.  
-- ✅ Designed **real-time monitoring dashboard (Prometheus + Grafana)** for live equipment health tracking.  
-- ✅ Achieved **85%+ accuracy** in early fault detection, reducing unplanned downtime risk.  
-
----
-
-## 8. Optional Extensions (For Extra “Wow” Factor)
-- **Edge Deployment:** Deploy lightweight models on Raspberry Pi/Jetson Nano for on-device inference.  
-- **Digital Twin:** Build a virtual simulation of equipment performance.  
-- **Explainability:** Use SHAP values to explain why a machine is predicted to fail.  
-
----
-
-## 📂 Project Structure (Proposed)
-```
-
-predictive-maintenance/
-│── data/              # Raw & processed datasets
-│── notebooks/         # EDA & experiments
-│── src/               # Source code for pipelines & training
-│── models/            # Saved models & weights
-│── api/               # FastAPI service
-│── mlflow/            # MLflow experiments & registry
-│── docker/            # Dockerfiles & configs
-│── requirements.txt   # Dependencies
-│── README.md          # Project documentation
-
+predictive-maintenance-with-mlops/
+│
+├── backend/
+│   ├── main.py                  # FastAPI backend with ML endpoints
+│   ├── model.pkl                # Trained ML model (Random Forest)
+│   ├── utils.py                 # Helper functions for preprocessing
+│   └── requirements.txt
+│
+├── frontend/
+│   ├── index.html               # Dashboard page
+│   ├── predict.html             # RUL prediction form
+│   ├── model-metrics.html       # Model performance metrics
+│   ├── api-health.html          # API health page
+│   ├── services/
+│   │   └── api.js               # API service for frontend
+│   └── script.js                # UI logic and event handling
+│
+├── mlflow.db                    # Local MLflow tracking database
+├── notebook/
+│   ├── eda_and_model.ipynb      # Data analysis and model training
+│
+├── .gitignore
+├── README.md
+└── requirements.txt
 ```
 
 ---
 
-## 🚀 How to Run (Coming Soon)
-1. Clone repo  
-2. Install dependencies  
-3. Run preprocessing pipeline  
-4. Train model with MLflow tracking  
-5. Deploy API with Docker  
-6. Monitor system with Grafana  
+##  Features
+
+✅ **Machine Learning**
+
+* Predicts Remaining Useful Life (RUL) of engines using sensor data.
+* Model trained on NASA Turbofan Engine dataset (C-MAPSS).
+* Feature engineering and preprocessing handled in pipeline.
+
+✅ **FastAPI Backend**
+
+* RESTful endpoints for prediction, health check, and model info.
+* Batch prediction and reload model functionality.
+* CORS enabled for frontend integration.
+
+✅ **Frontend Dashboard**
+
+* Simple and responsive UI built with TailwindCSS.
+* Real-time prediction form and dashboard with live API connection.
+* Displays RUL value, model info, and timestamp.
+
+✅ **MLflow Integration**
+
+* Tracks model runs, hyperparameters, metrics (RMSE, R²).
+* Version control for each trained model.
+* UI for experiment comparison and performance analysis.
+
+✅ **Deployment-Ready**
+
+* Works locally via FastAPI server (`localhost:8000`).
+* Ready for cloud deployment on Render or Railway.
+* Modular folder structure for CI/CD pipeline setup.
 
 ---
 
-## 🙌 Acknowledgements
-- NASA Prognostics Data Repository  
-- PHM Society Challenge  
-- Open-source tools: MLflow, Feast, Evidently, Prometheus, Grafana, FastAPI  
+##  API Endpoints
+
+| Endpoint         | Method | Description                             |
+| ---------------- | ------ | --------------------------------------- |
+| `/health`        | GET    | Check if API is running                 |
+| `/model/info`    | GET    | Get model metadata and training metrics |
+| `/predict`       | POST   | Predict RUL for a single data input     |
+| `/predict/batch` | POST   | Upload CSV for batch predictions        |
+| `/model/reload`  | POST   | Reload or refresh model in memory       |
+
+---
+
+##  Example Prediction Request
+
+**Request:**
+
+```json
+POST /predict
+{
+  "engine_id": 1,
+  "cycle": 120,
+  "max_cycle": 250,
+  "sensor_2": -0.0007,
+  "sensor_3": -0.0004,
+  "sensor_4": 100.0,
+  "sensor_5": 518.67,
+  ...
+}
+```
+
+**Response:**
+
+```json
+{
+  "engine_id": 1,
+  "rul_prediction": 89.3,
+  "model_version": "v1.0",
+  "prediction_timestamp": "2025-10-10 12:45:32",
+  "status": "Success"
+}
+```
+
+---
+
+## 💻 Run Locally
+
+### 1️⃣ Clone the Repository
+
+```bash
+git clone https://github.com/KiranRathod4/Predictive-Maintenance-with-MLOps.git
+cd Predictive-Maintenance-with-MLOps
+```
+
+### 2️⃣ Create Virtual Environment
+
+```bash
+python -m venv venv
+venv\Scripts\activate     # Windows
+source venv/bin/activate  # Linux/Mac
+```
+
+### 3️⃣ Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4️⃣ Start MLflow (optional)
+
+```bash
+mlflow ui
+```
+
+Access MLflow at: [http://localhost:5000](http://localhost:5000)
+
+### 5️⃣ Run FastAPI Server
+
+```bash
+uvicorn backend.main:app --reload
+```
+
+Server runs at: [http://localhost:8000](http://localhost:8000)
+
+### 6️⃣ Open Frontend
+
+Open `frontend/predict.html` in your browser.
+
+---
+
+## 🌐 Deployment Guide
+
+
+---
+
+## 📊 Results
+
+| Metric              | Value                             |
+| ------------------- | --------------------------------- |
+| **Validation RMSE** | 3.75                              |
+| **Validation R²**   | 0.997                             |
+| **Model Type**      | RandomForestRegressor             |
+| **Dataset**         | NASA C-MAPSS Turbofan Engine Data |
+
+---
+
+##  Learning Outcomes
+
+Through this project, I learned:
+
+* How to **design a scalable ML system** using MLOps best practices.
+* Serving ML models via **FastAPI REST API**.
+* Building a **real-time dashboard** for predictions.
+* Tracking and managing ML experiments using **MLflow**.
+* Setting up **GitHub version control and deployment pipelines**.
+
+---
+
+## 🧑‍💻 Author
+
+**Kiran Rathod**
+🎓 Data Science & Machine Learning Enthusiast
+💼 Exploring MLOps, AI Systems, and End-to-End Deployment
+🌐 [LinkedIn](https://www.linkedin.com/in/kiranrathod05/) | [GitHub](https://github.com/KiranRathod4)
+
+---
+
+## 🪪 License
+
+This project is open-source under the **MIT License**.
+Feel free to use, modify, and distribute with attribution.
+
+---
 
 
 Pipeline:
