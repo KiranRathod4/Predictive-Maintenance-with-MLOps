@@ -26,131 +26,143 @@ env:
 jobs:
   # Job 1: Run Tests (Optional)
   test:
-    name: 🧪 Run Tests
+    name: Run Tests
     runs-on: ubuntu-latest
     if: github.event.inputs.run_tests == 'true'
 
     steps:
-      - name: 📥 Checkout code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: 🐍 Set up Python
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: "pip"
 
-      - name: 📦 Install dependencies
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pytest pytest-cov
 
-      - name: 🗂️ Create required data directories
+      - name: Ensure required data directories exist
         run: |
           mkdir -p data/processed
           mkdir -p data/features
-          # Optional: add .gitkeep if you want empty directories tracked
-          touch data/processed/.gitkeep
-          touch data/features/.gitkeep
 
-      - name: 🧪 Run integration tests
+      - name: Run integration tests
         run: |
           python -m pytest tests/integration/test_integration.py -v
         env:
           PYTHONPATH: ${{ github.workspace }}
         continue-on-error: false
 
-      - name: ✅ Tests passed
+      - name: Tests passed
         run: |
-          echo "✅ All tests passed successfully!"
+          echo "All tests passed successfully!"
 
   # Job 2: Deploy to EC2
   deploy:
-    name: 🚀 Deploy to EC2
+    name: Deploy to EC2
     runs-on: ubuntu-latest
     needs: test
     if: always() && (needs.test.result == 'success' || needs.test.result == 'skipped')
 
     steps:
-      - name: 📥 Checkout code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: 🔐 Configure SSH
+      - name: Configure SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      - name: 📤 Deploy code to EC2
+      - name: Deploy code to EC2
         run: |
           ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'ENDSSH'
-            echo "🚀 Starting deployment..."
+            echo " Starting deployment..."
             
+            # Navigate to project directory
             cd ~/Predictive-Maintenance-with-MLOps
             
-            echo "📥 Pulling latest code from GitHub..."
+            # Pull latest code
+            echo " Pulling latest code from GitHub..."
             git pull origin main
             
-            echo "🐍 Activating virtual environment..."
+            # Activate virtual environment
+            echo " Activating virtual environment..."
             source venv/bin/activate
             
-            echo "📦 Installing dependencies..."
+            # Install/update dependencies
+            echo " Installing dependencies..."
             pip install -r requirements.txt --quiet
             
-            echo "✅ Code deployment completed!"
+            echo " Code deployment completed!"
           ENDSSH
 
-      - name: 🔄 Restart Services
+      - name: Restart Services
         if: github.event.inputs.restart_services == 'true'
         run: |
           ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'ENDSSH'
-            echo "🔄 Restarting API service..."
+            echo " Restarting API service..."
             sudo systemctl restart mlops-api
+            
+            # Wait for service to start
             sleep 5
+            
+            # Check if service is running
             if sudo systemctl is-active --quiet mlops-api; then
-              echo "✅ API service restarted successfully!"
+              echo "API service restarted successfully!"
             else
-              echo "❌ API service failed to start!"
+              echo " API service failed to start!"
               sudo journalctl -u mlops-api -n 50
               exit 1
             fi
-            echo "🔄 Reloading Nginx..."
+            
+            # Reload Nginx (for UI updates)
+            echo " Reloading Nginx..."
             sudo systemctl reload nginx
-            echo "✅ Nginx reloaded!"
+            echo " Nginx reloaded!"
           ENDSSH
 
-      - name: 🏥 Health Check
+      - name: Health Check
         run: |
-          echo "⏳ Waiting for application to be ready..."
+          echo "Waiting for application to be ready..."
           sleep 10
+
+          echo "Checking API health..."
           response=$(curl -s -o /dev/null -w "%{http_code}" http://${{ secrets.EC2_HOST }}:8000/ || echo "000")
+
           if [ "$response" -eq 200 ]; then
-            echo "✅ API is healthy (HTTP $response)"
+            echo " API is healthy (HTTP $response)"
           else
-            echo "⚠️ API health check returned HTTP $response"
+            echo " API health check returned HTTP $response"
+            echo "Checking if API is running internally..."
+            
             ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'ENDSSH'
               sudo systemctl status mlops-api
               sudo journalctl -u mlops-api -n 20
             ENDSSH
           fi
 
-      - name: 🧹 Cleanup
+      - name: Cleanup
         if: always()
         run: rm -f ~/.ssh/deploy_key
 
   # Job 3: Deployment Summary
   summary:
-    name: 📊 Deployment Summary
+    name: Deployment Summary
     runs-on: ubuntu-latest
     needs: [test, deploy]
     if: always()
 
     steps:
-      - name: 📊 Generate Summary
+      - name: Generate Summary
         run: |
-          echo "## 🚀 Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Step | Status |" >> $GITHUB_STEP_SUMMARY
           echo "|------|--------|" >> $GITHUB_STEP_SUMMARY
@@ -159,18 +171,18 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
 
           if [ "${{ needs.deploy.result }}" == "success" ]; then
-            echo "### ✅ Deployment Successful!" >> $GITHUB_STEP_SUMMARY
+            echo "###  Deployment Successful!" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "🌐 **API:** http://${{ secrets.EC2_HOST }}:8000" >> $GITHUB_STEP_SUMMARY
-            echo "📚 **API Docs:** http://${{ secrets.EC2_HOST }}:8000/docs" >> $GITHUB_STEP_SUMMARY
-            echo "🎨 **UI:** http://${{ secrets.EC2_HOST }}/" >> $GITHUB_STEP_SUMMARY
+            echo " **API:** http://${{ secrets.EC2_HOST }}:8000" >> $GITHUB_STEP_SUMMARY
+            echo " **API Docs:** http://${{ secrets.EC2_HOST }}:8000/docs" >> $GITHUB_STEP_SUMMARY
+            echo " **UI:** http://${{ secrets.EC2_HOST }}/" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
             echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
             echo "**Deployed by:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
             echo "**Time:** $(date -u)" >> $GITHUB_STEP_SUMMARY
           else
-            echo "### ❌ Deployment Failed!" >> $GITHUB_STEP_SUMMARY
+            echo "###  Deployment Failed!" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "Please check the logs above for error details." >> $GITHUB_STEP_SUMMARY
           fi
