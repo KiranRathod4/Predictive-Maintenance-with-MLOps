@@ -126,10 +126,9 @@ jobs:
             echo "⚠️ API health check returned HTTP $response"
             echo "Checking if API is running internally..."
             
-            ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "
-            sudo systemctl status mlops-api
-            sudo journalctl -u mlops-api -n 20
-            "
+            # Use separate SSH commands without HEREDOC
+            ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "sudo systemctl status mlops-api && echo '--- Service Status Above ---'"
+            ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "sudo journalctl -u mlops-api -n 20 --no-pager"
           fi
 
       - name: Cleanup
