@@ -45,6 +45,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pytest pytest-cov
+          
+      - name: 🗂️ Create required data directories
+        run: |
+          mkdir -p data/processed
+          mkdir -p data/features
 
       - name: 🧪 Run integration tests
         run: |
