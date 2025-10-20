@@ -45,11 +45,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pytest pytest-cov
-          
+
       - name: 🗂️ Create required data directories
         run: |
           mkdir -p data/processed
           mkdir -p data/features
+          # Optional: add .gitkeep if you want empty directories tracked
+          touch data/processed/.gitkeep
+          touch data/features/.gitkeep
 
       - name: 🧪 Run integration tests
         run: |
@@ -85,18 +88,14 @@ jobs:
           ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'ENDSSH'
             echo "🚀 Starting deployment..."
             
-            # Navigate to project directory
             cd ~/Predictive-Maintenance-with-MLOps
             
-            # Pull latest code
             echo "📥 Pulling latest code from GitHub..."
             git pull origin main
             
-            # Activate virtual environment
             echo "🐍 Activating virtual environment..."
             source venv/bin/activate
             
-            # Install/update dependencies
             echo "📦 Installing dependencies..."
             pip install -r requirements.txt --quiet
             
@@ -109,11 +108,7 @@ jobs:
           ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'ENDSSH'
             echo "🔄 Restarting API service..."
             sudo systemctl restart mlops-api
-            
-            # Wait for service to start
             sleep 5
-            
-            # Check if service is running
             if sudo systemctl is-active --quiet mlops-api; then
               echo "✅ API service restarted successfully!"
             else
@@ -121,8 +116,6 @@ jobs:
               sudo journalctl -u mlops-api -n 50
               exit 1
             fi
-            
-            # Reload Nginx (for UI updates)
             echo "🔄 Reloading Nginx..."
             sudo systemctl reload nginx
             echo "✅ Nginx reloaded!"
@@ -132,16 +125,11 @@ jobs:
         run: |
           echo "⏳ Waiting for application to be ready..."
           sleep 10
-
-          echo "🏥 Checking API health..."
           response=$(curl -s -o /dev/null -w "%{http_code}" http://${{ secrets.EC2_HOST }}:8000/ || echo "000")
-
           if [ "$response" -eq 200 ]; then
             echo "✅ API is healthy (HTTP $response)"
           else
             echo "⚠️ API health check returned HTTP $response"
-            echo "Checking if API is running internally..."
-            
             ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'ENDSSH'
               sudo systemctl status mlops-api
               sudo journalctl -u mlops-api -n 20
