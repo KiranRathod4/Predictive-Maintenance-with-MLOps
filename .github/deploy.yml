@@ -81,55 +81,55 @@ jobs:
 
       - name: Deploy code to EC2
         run: |
-          ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'ENDSSH'
-echo "Starting deployment..."
-cd ~/Predictive-Maintenance-with-MLOps
-echo "Pulling latest code from GitHub..."
-git pull origin main
-echo "Activating virtual environment..."
-source venv/bin/activate
-echo "Installing dependencies..."
-pip install -r requirements.txt --quiet
-echo "Code deployment completed!"
-ENDSSH
+          ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "
+          echo 'Starting deployment...'
+          cd ~/Predictive-Maintenance-with-MLOps
+          echo 'Pulling latest code from GitHub...'
+          git pull origin main
+          echo 'Activating virtual environment...'
+          source venv/bin/activate
+          echo 'Installing dependencies...'
+          pip install -r requirements.txt --quiet
+          echo 'Code deployment completed!'
+          "
 
       - name: Restart Services
         if: github.event.inputs.restart_services == 'true'
         run: |
-          ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'ENDSSH'
-echo "Restarting API service..."
-sudo systemctl restart mlops-api
-sleep 5
-if sudo systemctl is-active --quiet mlops-api; then
-  echo "API service restarted successfully!"
-else
-  echo "API service failed to start!"
-  sudo journalctl -u mlops-api -n 50
-  exit 1
-fi
-echo "Reloading Nginx..."
-sudo systemctl reload nginx
-echo "Nginx reloaded!"
-ENDSSH
+          ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "
+          echo 'Restarting API service...'
+          sudo systemctl restart mlops-api
+          sleep 5
+          if sudo systemctl is-active --quiet mlops-api; then
+            echo 'API service restarted successfully!'
+          else
+            echo 'API service failed to start!'
+            sudo journalctl -u mlops-api -n 50
+            exit 1
+          fi
+          echo 'Reloading Nginx...'
+          sudo systemctl reload nginx
+          echo 'Nginx reloaded!'
+          "
 
       - name: Health Check
         run: |
           echo "⏳ Waiting for application to be ready..."
           sleep 10
-          
+
           echo "🏥 Checking API health..."
           response=$(curl -s -o /dev/null -w "%{http_code}" http://${{ secrets.EC2_HOST }}:8000/ || echo "000")
-          
+
           if [ "$response" -eq 200 ]; then
             echo "✅ API is healthy (HTTP $response)"
           else
             echo "⚠️ API health check returned HTTP $response"
             echo "Checking if API is running internally..."
             
-            ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'ENDSSH'
-sudo systemctl status mlops-api
-sudo journalctl -u mlops-api -n 20
-ENDSSH
+            ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "
+            sudo systemctl status mlops-api
+            sudo journalctl -u mlops-api -n 20
+            "
           fi
 
       - name: Cleanup
