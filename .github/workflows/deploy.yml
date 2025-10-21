@@ -46,12 +46,15 @@ jobs:
           pip install -r requirements.txt
           pip install pytest pytest-cov
 
+      - name: 📁 Create required directories
+        run: |
+          mkdir -p data/processed data/features data/raw
+
       - name: 🧪 Run integration tests
         run: |
           python -m pytest tests/integration/test_integration.py -v
         env:
           PYTHONPATH: ${{ github.workspace }}
-        continue-on-error: false
 
       - name: ✅ Tests passed
         run: |
@@ -75,72 +78,44 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      - name: 📤 Deploy code to EC2
+      - name: 📤 Pull latest code
         run: |
-          ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'ENDSSH'
-            echo "🚀 Starting deployment..."
-            
-            # Navigate to project directory
-            cd ~/Predictive-Maintenance-with-MLOps
-            
-            # Pull latest code
-            echo "📥 Pulling latest code from GitHub..."
-            git pull origin main
-            
-            # Activate virtual environment
-            echo "🐍 Activating virtual environment..."
-            source venv/bin/activate
-            
-            # Install/update dependencies
-            echo "📦 Installing dependencies..."
-            pip install -r requirements.txt --quiet
-            
-            echo "✅ Code deployment completed!"
-          ENDSSH
+          ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "cd ~/Predictive-Maintenance-with-MLOps && git pull origin main"
 
-      - name: 🔄 Restart Services
+      - name: 📦 Install dependencies
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "cd ~/Predictive-Maintenance-with-MLOps && source venv/bin/activate && pip install -r requirements.txt --quiet"
+
+      - name: 🔄 Restart API Service
         if: github.event.inputs.restart_services == 'true'
         run: |
-          ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'ENDSSH'
-            echo "🔄 Restarting API service..."
-            sudo systemctl restart mlops-api
-            
-            # Wait for service to start
-            sleep 5
-            
-            # Check if service is running
-            if sudo systemctl is-active --quiet mlops-api; then
-              echo "✅ API service restarted successfully!"
-            else
-              echo "❌ API service failed to start!"
-              sudo journalctl -u mlops-api -n 50
-              exit 1
-            fi
-            
-            # Reload Nginx (for UI updates)
-            echo "🔄 Reloading Nginx..."
-            sudo systemctl reload nginx
-            echo "✅ Nginx reloaded!"
-          ENDSSH
+          ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "sudo systemctl restart mlops-api"
+
+      - name: ⏳ Wait for service
+        if: github.event.inputs.restart_services == 'true'
+        run: sleep 10
+
+      - name: ✅ Check API service status
+        if: github.event.inputs.restart_services == 'true'
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "sudo systemctl is-active mlops-api && echo 'API service is running' || (echo 'API service failed' && sudo journalctl -u mlops-api -n 30 --no-pager && exit 1)"
+
+      - name: 🔄 Reload Nginx
+        if: github.event.inputs.restart_services == 'true'
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "sudo systemctl reload nginx"
 
       - name: 🏥 Health Check
         run: |
-          echo "⏳ Waiting for application to be ready..."
-          sleep 10
-
           echo "🏥 Checking API health..."
+          sleep 5
           response=$(curl -s -o /dev/null -w "%{http_code}" http://${{ secrets.EC2_HOST }}:8000/ || echo "000")
 
           if [ "$response" -eq 200 ]; then
             echo "✅ API is healthy (HTTP $response)"
           else
             echo "⚠️ API health check returned HTTP $response"
-            echo "Checking if API is running internally..."
-            
-            ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'ENDSSH'
-              sudo systemctl status mlops-api
-              sudo journalctl -u mlops-api -n 20
-            ENDSSH
+            echo "Note: Port 8000 might not be accessible from outside, but API may be running internally"
           fi
 
       - name: 🧹 Cleanup
@@ -175,7 +150,6 @@ jobs:
             echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
             echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
             echo "**Deployed by:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
-            echo "**Time:** $(date -u)" >> $GITHUB_STEP_SUMMARY
           else
             echo "### ❌ Deployment Failed!" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
