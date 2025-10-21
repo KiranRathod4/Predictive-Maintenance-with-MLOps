@@ -1,5 +1,5 @@
 class APIService {
-    constructor(baseURL = 'http://localhost:8000') {
+    constructor(baseURL = 'http://65.0.135.39:8000') {
         this.baseURL = baseURL;
     }
 
