@@ -1,0 +1,22 @@
+artifact_path: file:///D:/predictive-maintenance-with-MLOPS/mlruns/205986093040088370/models/m-82ec3bc0ec8f4482a43c6fce5f7a5e28/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.13.4
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.7.2
+mlflow_version: 3.4.0
+model_id: m-82ec3bc0ec8f4482a43c6fce5f7a5e28
+model_size_bytes: 14194556
+model_uuid: m-82ec3bc0ec8f4482a43c6fce5f7a5e28
+prompts: null
+run_id: b55170ef36f44191acfed1cb0b1603d8
+utc_time_created: '2025-10-21 15:16:56.703208'

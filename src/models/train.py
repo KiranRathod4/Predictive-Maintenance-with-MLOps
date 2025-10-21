@@ -91,6 +91,7 @@ def main():
         metrics = {
             "train_rmse": float(train_rmse),
             "val_rmse": float(val_rmse),
+            "rmse": float(val_rmse),
             "train_r2": float(train_r2),
             "val_r2": float(val_r2),
             "train_mae": float(train_mae),
