@@ -66,7 +66,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 
             } catch (error) {
                 console.error('Prediction error:', error);
-                showError(`Prediction failed: ${error.message}. Make sure the API is running at http://localhost:8000`, resultContainer);
+               showError(`Prediction failed: ${error.message}. Make sure the API is running at http://65.0.135.39:8000`, resultContainer);
+
             }
         });
         console.log('Form handler attached successfully');
