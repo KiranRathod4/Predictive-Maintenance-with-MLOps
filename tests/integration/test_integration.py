@@ -16,28 +16,36 @@ class TestEndToEndPipeline:
         """Setup integration test environment"""
         self.api_base_url = "http://65.0.135.39:8000"  # Will be overridden in CI
         self.sample_data = {
-            "setting1": 42.0,
-            "setting2": 0.84,
-            "setting3": 100.0,
+
+            "engine_id": 1,
+            "cycle": 150,
             "sensor_2": 642.35,
             "sensor_3": 1589.70,
             "sensor_4": 1400.60,
+            "sensor_5": 123.0,
             "sensor_6": 21.61,
             "sensor_7": 554.36,
             "sensor_8": 2388.06,
             "sensor_9": 9046.19,
+            "sensor_10": 100.0,
             "sensor_11": 47.47,
             "sensor_12": 521.66,
             "sensor_13": 2388.02,
             "sensor_14": 8138.62,
             "sensor_15": 8.4195,
+            "sensor_16": 50.0,
             "sensor_17": 8.4195,
+            "sensor_18": 10.0,
+            "sensor_19": 5.0,
             "sensor_20": 0.03,
             "sensor_21": 0.02,
-            "engine_id": 1,
-            "cycle": 150
+            "sensor_22": 0.0,
+            "sensor_23": 0.0,
+            "sensor_24": 0.0,
+            "sensor_25": 0.0,
+            "max_cycle": 300
         }
-    
+
     def test_api_availability(self):
         """Test that API is available and responding"""
         try:
