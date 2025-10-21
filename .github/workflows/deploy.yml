@@ -80,7 +80,7 @@ jobs:
 
       - name: 📤 Pull latest code
         run: |
-          ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "cd ~/Predictive-Maintenance-with-MLOps && git pull origin main"
+          ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "cd ~/Predictive-Maintenance-with-MLOps && git fetch origin && git reset --hard origin/main"
 
       - name: 📦 Install dependencies
         run: |
