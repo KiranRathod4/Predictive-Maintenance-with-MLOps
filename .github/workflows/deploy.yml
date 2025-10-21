@@ -78,18 +78,36 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
+          # Create SSH config for better connection handling
+          cat >> ~/.ssh/config << EOF
+          Host ec2-deploy
+            HostName ${{ secrets.EC2_HOST }}
+            User ${{ secrets.EC2_USERNAME }}
+            IdentityFile ~/.ssh/deploy_key
+            ServerAliveInterval 60
+            ServerAliveCountMax 5
+            StrictHostKeyChecking no
+            ConnectTimeout 30
+          EOF
+          chmod 600 ~/.ssh/config
+
+      - name: 🔍 Test SSH Connection
+        run: |
+          echo "Testing SSH connection to EC2..."
+          ssh ec2-deploy "echo '✅ SSH connection successful' && uptime"
+
       - name: 📤 Pull latest code
         run: |
-          ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "cd ~/Predictive-Maintenance-with-MLOps && git fetch origin && git reset --hard origin/main"
+          ssh ec2-deploy "cd ~/Predictive-Maintenance-with-MLOps && git fetch origin && git reset --hard origin/main && echo 'Code updated successfully'"
 
       - name: 📦 Install dependencies
         run: |
-          ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "cd ~/Predictive-Maintenance-with-MLOps && source venv/bin/activate && pip install -r requirements.txt --quiet"
+          ssh ec2-deploy "cd ~/Predictive-Maintenance-with-MLOps && source venv/bin/activate && pip install -r requirements.txt --quiet && echo 'Dependencies installed'"
 
       - name: 🔄 Restart API Service
         if: github.event.inputs.restart_services == 'true'
         run: |
-          ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "sudo systemctl restart mlops-api"
+          ssh ec2-deploy "sudo systemctl restart mlops-api && echo 'API service restart initiated'"
 
       - name: ⏳ Wait for service
         if: github.event.inputs.restart_services == 'true'
@@ -98,12 +116,12 @@ jobs:
       - name: ✅ Check API service status
         if: github.event.inputs.restart_services == 'true'
         run: |
-          ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "sudo systemctl is-active mlops-api && echo 'API service is running' || (echo 'API service failed' && sudo journalctl -u mlops-api -n 30 --no-pager && exit 1)"
+          ssh ec2-deploy "sudo systemctl is-active mlops-api && echo '✅ API service is running' || (echo '❌ API service failed' && sudo journalctl -u mlops-api -n 30 --no-pager && exit 1)"
 
       - name: 🔄 Reload Nginx
         if: github.event.inputs.restart_services == 'true'
         run: |
-          ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "sudo systemctl reload nginx"
+          ssh ec2-deploy "sudo systemctl reload nginx && echo 'Nginx reloaded'"
 
       - name: 🏥 Health Check
         run: |
