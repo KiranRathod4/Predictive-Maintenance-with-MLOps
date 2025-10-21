@@ -26,7 +26,7 @@ permissions:
 
 env:
   PYTHON_VERSION: "3.11"
-  MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
+  MLFLOW_TRACKING_URI: http://65.0.135.39:5000 
 
 jobs:
   # Job 1: Data Validation and Preprocessing
