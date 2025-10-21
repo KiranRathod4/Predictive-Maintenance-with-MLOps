@@ -14,7 +14,7 @@ class TestEndToEndPipeline:
     @pytest.fixture(autouse=True)
     def setup(self):
         """Setup integration test environment"""
-        self.api_base_url = "http://localhost:8000"  # Will be overridden in CI
+        self.api_base_url = "http://65.0.135.39:8000"  # Will be overridden in CI
         self.sample_data = {
             "setting1": 42.0,
             "setting2": 0.84,

@@ -13,7 +13,7 @@ from datetime import datetime
 class APILoadTester:
     """Load tester for predictive maintenance API"""
     
-    def __init__(self, base_url="http://localhost:8000"):
+    def __init__(self, base_url="http://65.0.135.39:8000"):
         self.base_url = base_url
         self.sample_data = {
             "setting1": 42.0,
@@ -183,7 +183,7 @@ def main():
     import argparse
     
     parser = argparse.ArgumentParser(description='Run API load test')
-    parser.add_argument('--url', default='http://localhost:8000', help='API base URL')
+    parser.add_argument('--url', default='http://65.0.135.39:8000', help='API base URL')
     parser.add_argument('--requests', type=int, default=50, help='Number of requests')
     parser.add_argument('--workers', type=int, default=10, help='Number of workers')
     
