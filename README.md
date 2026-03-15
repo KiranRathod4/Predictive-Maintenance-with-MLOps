@@ -1,6 +1,6 @@
 <div align="center">
 
-# ✈️ Predictive Maintenance with MLOps
+# Predictive Maintenance with MLOps
 
 ### End-to-End Machine Learning System for Aircraft Engine RUL Prediction
 
@@ -20,7 +20,7 @@
 
 | 🎯 Validation R² | 📉 Validation RMSE | 🔁 Total Predictions | ⚙️ Model Type |
 |:---:|:---:|:---:|:---:|
-| **0.997** | **3.75** | **12,345+** | **RandomForestRegressor** |
+| **0.997** | **3.75** | **5000+** | **RandomForestRegressor** |
 
 </div>
 
@@ -89,7 +89,7 @@ The application ships with two frontend interfaces — a **light-mode quick pred
 
 ---
 
-### Full Analytics Dashboard (Dark Mode)
+### Full Analytics Mock Dashboard (Dark Mode)
 
 <div align="center">
 <img src="docs/images/dashboard-dark.png" alt="Predictive Maintenance Dashboard - Dark Mode" width="800"/>
