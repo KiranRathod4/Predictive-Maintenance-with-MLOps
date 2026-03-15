@@ -46,19 +46,19 @@
 
 ---
 
-## 🔭 Overview
+## Overview
 
 This project implements a **fully operationalized machine learning system** for predictive maintenance of aircraft engines. Given real-time sensor readings, the system predicts how many operational cycles remain before an engine requires maintenance — enabling proactive intervention before failure occurs.
 
 The system goes far beyond a Jupyter notebook: it is a complete **MLOps lifecycle** implementation covering data ingestion, model training with experiment tracking, REST API serving, a rich frontend dashboard, containerization, cloud deployment on AWS EC2, and live observability via Prometheus and Grafana.
 
-### 💡 Why This Matters
+###  Why This Matters
 
 Unplanned equipment failures in aviation cost billions annually. Predictive maintenance reduces unplanned downtime by up to **30%** and maintenance costs by up to **25%**. This project demonstrates how modern ML engineering practices can bring a model from research to production in a scalable, maintainable way.
 
 ---
 
-## 📋 Project Proposal & Milestones
+##  Project Proposal & Milestones
 
 <div align="center">
 <img src="docs/images/project-proposal.png" alt="Project Proposal" width="600"/>
@@ -75,7 +75,7 @@ The project was structured across four milestones spanning planning, data prepar
 
 ---
 
-## 🖥️ Live Dashboard
+##  Mock Dashboard
 
 The application ships with two frontend interfaces — a **light-mode quick predictor** and a **full dark-mode analytics dashboard**.
 
@@ -160,24 +160,24 @@ The application ships with two frontend interfaces — a **light-mode quick pred
                            ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                    Training Pipeline                            │
-│   src/models/train.py  →  MLflow Tracking Server (port 5000)   │
+│   src/models/train.py  →  MLflow Tracking Server (port 5000)    │
 │   Dataset: NASA C-MAPSS  →  RandomForestRegressor               │
-│   Artifacts: model.pkl, metrics, plots → MLflow Model Registry │
+│   Artifacts: model.pkl, metrics, plots → MLflow Model Registry  │
 └──────────────────────────┬──────────────────────────────────────┘
                            │  Docker Build + Push to ECR
                            ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                   Production Services (Docker Compose)          │
-│                                                                  │
-│  ┌──────────────┐   ┌──────────────┐   ┌────────────────────┐  │
+│                                                                 │
+│  ┌──────────────┐   ┌──────────────┐   ┌────────────────────┐   │
 │  │  FastAPI      │   │  MLflow UI   │   │  Frontend (HTML)   │  │
-│  │  (port 8000) │   │  (port 5000) │   │  Dashboard (80)    │  │
-│  └──────┬───────┘   └──────────────┘   └────────────────────┘  │
-│         │ /metrics                                               │
-│  ┌──────▼───────┐   ┌──────────────┐                           │
-│  │  Prometheus  │──▶│   Grafana    │                           │
-│  │  (port 9090) │   │  (port 3000) │                           │
-│  └──────────────┘   └──────────────┘                           │
+│  │  (port 8000) │   │  (port 5000) │   │  Dashboard (80)    │   │
+│  └──────┬───────┘   └──────────────┘   └────────────────────┘   │
+│         │ /metrics                                              │
+│  ┌──────▼───────┐   ┌──────────────┐                            │
+│  │  Prometheus  │──▶│   Grafana    │                            │
+│  │  (port 9090) │   │  (port 3000) │                            │
+│  └──────────────┘   └──────────────┘                            │
 └──────────────────────────┬──────────────────────────────────────┘
                            │
                            ▼
@@ -226,7 +226,7 @@ Predictive-Maintenance-with-MLOps/
 
 ---
 
-## 📊 Dataset
+##  Dataset
 
 **NASA C-MAPSS Turbofan Engine Degradation Dataset**
 
@@ -244,7 +244,7 @@ The dataset simulates turbofan engine run-to-failure experiments. Each row repre
 
 ---
 
-## 🤖 ML Model & Results
+##  ML Model & Results
 
 ### Training Pipeline
 
@@ -671,37 +671,6 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 
 </div>
 
----
-
-<div align="center">
-
-### 📂 Image Assets Setup
-
-> To render all screenshots correctly, create a `docs/images/` folder in your repo root and add the following files:
-
-| File Name | Screenshot |
-|-----------|-----------|
-| `project-proposal.png` | Project proposal document |
-| `dashboard-main-light.png` | Aircraft Engine RUL Predictor (light UI) |
-| `dashboard-dark.png` | Predictive Maintenance Dashboard (dark) |
-| `quick-links.png` | Quick Links panel |
-| `predict-rul-44.png` | Prediction result — 44 cycles |
-| `predict-rul-61.png` | Prediction result — 61 cycles |
-| `training-output.png` | Training terminal output (RMSE / R²) |
-| `training-summary.png` | 4-panel training summary plot |
-| `residuals-plot.png` | Standalone residuals plot |
-| `mlflow-experiments.png` | MLflow experiments list |
-| `mlflow-run-details.png` | MLflow run details & parameters |
-| `prometheus-targets.png` | Prometheus target health |
-| `grafana-dashboard.png` | Grafana live dashboard |
-| `grafana-requests-panel.png` | Grafana HTTP requests panel |
-| `grafana-alert-rule.png` | Grafana Low RUL alert rule |
-| `grafana-alert-evaluation.png` | Grafana alert evaluation config |
-| `aws-ec2-instances.png` | AWS EC2 instances list |
-| `aws-ec2-detail.png` | EC2 instance summary |
-| `ec2-uvicorn-running.png` | Uvicorn running on EC2 terminal |
-
-</div>
 
 ---
 
