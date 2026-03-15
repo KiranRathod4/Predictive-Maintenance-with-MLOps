@@ -18,9 +18,15 @@
 
 <br/>
 
+<<<<<<< HEAD
 | 🎯 Validation R² | 📉 Validation RMSE | 🔁 Total Predictions | ⚙️ Model Type |
 |:---:|:---:|:---:|:---:|
 | **0.997** | **3.75** | **12,345+** | **RandomForestRegressor** |
+=======
+| 🎯 Validation R² | 📉 Validation RMSE | 🔁 Total Predictions |       ⚙️ Model Type       |
+| :--------------: | :----------------: | :------------------: | :-----------------------: |
+|    **0.997**     |      **3.75**      |     **12,345+**      | **RandomForestRegressor** |
+>>>>>>> cb59361 ( docs: add README and screenshots)
 
 </div>
 
@@ -66,12 +72,21 @@ Unplanned equipment failures in aviation cost billions annually. Predictive main
 
 The project was structured across four milestones spanning planning, data preparation, model development, and production deployment:
 
+<<<<<<< HEAD
 | Milestone | Phase | Key Tasks | Deliverable | Timeline |
 |-----------|-------|-----------|-------------|----------|
 | **M1** | Planning & Analysis | Outline workflow, gather data, identify tools | Stakeholders updated | 2–3 weeks |
 | **M2** | Data Engineering | Clean, convert, and format dataset | Database ready for modeling | 2–3 weeks |
 | **M3** | Model Construction | Build & test ML models, finalize strategies | Trained ML model | 4 weeks |
 | **M4** | Execution & Review | Finalize results, share findings, incorporate feedback | Visualizations, executive summary | 3 weeks |
+=======
+| Milestone | Phase               | Key Tasks                                              | Deliverable                       | Timeline  |
+| --------- | ------------------- | ------------------------------------------------------ | --------------------------------- | --------- |
+| **M1**    | Planning & Analysis | Outline workflow, gather data, identify tools          | Stakeholders updated              | 2–3 weeks |
+| **M2**    | Data Engineering    | Clean, convert, and format dataset                     | Database ready for modeling       | 2–3 weeks |
+| **M3**    | Model Construction  | Build & test ML models, finalize strategies            | Trained ML model                  | 4 weeks   |
+| **M4**    | Execution & Review  | Finalize results, share findings, incorporate feedback | Visualizations, executive summary | 3 weeks   |
+>>>>>>> cb59361 ( docs: add README and screenshots)
 
 ---
 
@@ -132,6 +147,7 @@ The application ships with two frontend interfaces — a **light-mode quick pred
 
 <div align="center">
 
+<<<<<<< HEAD
 | Layer | Technology | Purpose |
 |-------|-----------|---------|
 | **ML / Data** | Python, Scikit-learn, Pandas, NumPy | Model training, feature engineering |
@@ -144,6 +160,20 @@ The application ships with two frontend interfaces — a **light-mode quick pred
 | **Cloud** | AWS EC2 (t3.micro) + ECR | Production deployment in ap-south-1 region |
 | **CI/CD** | GitHub Actions | Automated test → build → deploy pipeline |
 | **Version Control** | Git + DVC | Code and data versioning |
+=======
+| Layer                   | Technology                          | Purpose                                                     |
+| ----------------------- | ----------------------------------- | ----------------------------------------------------------- |
+| **ML / Data**           | Python, Scikit-learn, Pandas, NumPy | Model training, feature engineering                         |
+| **Model**               | `RandomForestRegressor`             | RUL regression                                              |
+| **Experiment Tracking** | MLflow 3.4.0                        | Hyperparameter logging, model registry, artifact versioning |
+| **API**                 | FastAPI + Uvicorn                   | REST prediction endpoint, health checks, batch inference    |
+| **Frontend**            | HTML5 + JavaScript                  | Real-time prediction dashboard                              |
+| **Monitoring**          | Prometheus + Grafana                | Metrics scraping, alerting, live dashboards                 |
+| **Containerization**    | Docker + Docker Compose             | Reproducible multi-service environment                      |
+| **Cloud**               | AWS EC2 (t3.micro) + ECR            | Production deployment in ap-south-1 region                  |
+| **CI/CD**               | GitHub Actions                      | Automated test → build → deploy pipeline                    |
+| **Version Control**     | Git + DVC                           | Code and data versioning                                    |
+>>>>>>> cb59361 ( docs: add README and screenshots)
 
 </div>
 
@@ -230,6 +260,7 @@ Predictive-Maintenance-with-MLOps/
 
 **NASA C-MAPSS Turbofan Engine Degradation Dataset**
 
+<<<<<<< HEAD
 | Property | Value |
 |----------|-------|
 | Source | NASA Prognostics Center of Excellence |
@@ -239,6 +270,17 @@ Predictive-Maintenance-with-MLOps/
 | Validation Split | **4,127** (20%) |
 | Target Variable | Remaining Useful Life (RUL) in cycles |
 | Sensor Range | Sensors 2 – 25 |
+=======
+| Property         | Value                                     |
+| ---------------- | ----------------------------------------- |
+| Source           | NASA Prognostics Center of Excellence     |
+| Total Samples    | **20,631**                                |
+| Features         | **27** (26 sensor + operational settings) |
+| Train Split      | **16,504** (80%)                          |
+| Validation Split | **4,127** (20%)                           |
+| Target Variable  | Remaining Useful Life (RUL) in cycles     |
+| Sensor Range     | Sensors 2 – 25                            |
+>>>>>>> cb59361 ( docs: add README and screenshots)
 
 The dataset simulates turbofan engine run-to-failure experiments. Each row represents one operational cycle of an engine, with 21 sensor measurements and 3 operational setting columns. The target `RUL` is computed as the difference between the maximum observed cycle for that engine and the current cycle.
 
@@ -264,6 +306,7 @@ python src/models/train.py
 
 <div align="center">
 
+<<<<<<< HEAD
 | Metric | Value |
 |--------|-------|
 | ✅ Validation RMSE | **3.75** |
@@ -271,6 +314,15 @@ python src/models/train.py
 | 📊 Validation MAE | **2.09** |
 | 🔄 Overfitting Ratio | **1.26** |
 | 🌲 Algorithm | RandomForestRegressor |
+=======
+| Metric               | Value                 |
+| -------------------- | --------------------- |
+| ✅ Validation RMSE   | **3.75**              |
+| ✅ Validation R²     | **0.997**             |
+| 📊 Validation MAE    | **2.09**              |
+| 🔄 Overfitting Ratio | **1.26**              |
+| 🌲 Algorithm         | RandomForestRegressor |
+>>>>>>> cb59361 ( docs: add README and screenshots)
 
 </div>
 
@@ -338,18 +390,29 @@ python src/models/train.py
 ```
 
 This will:
+<<<<<<< HEAD
 - Load and preprocess the NASA C-MAPSS dataset
 - Train a `RandomForestRegressor`
 - Log all parameters, metrics, and artifacts to MLflow
 - Save `model.pkl` to the `models/` directory
 - Generate training summary plots in `reports/figures/`
 
+=======
+
+- Load and preprocess the NASA C-MAPSS dataset
+- Train a `RandomForestRegressor`
+- Log all parameters, metrics, and artifacts to MLflow
+- Save `model.pkl` to the `models/` directory
+- Generate training summary plots in `reports/figures/`
+
+>>>>>>> cb59361 ( docs: add README and screenshots)
 ### 5. Start All Services (Docker Compose)
 
 ```bash
 docker-compose up --build
 ```
 
+<<<<<<< HEAD
 | Service | URL |
 |---------|-----|
 | Frontend Dashboard | http://localhost |
@@ -358,6 +421,16 @@ docker-compose up --build
 | MLflow Tracking UI | http://localhost:5000 |
 | Prometheus | http://localhost:9090 |
 | Grafana | http://localhost:3000 |
+=======
+| Service            | URL                        |
+| ------------------ | -------------------------- |
+| Frontend Dashboard | http://localhost           |
+| FastAPI Backend    | http://localhost:8000      |
+| API Docs (Swagger) | http://localhost:8000/docs |
+| MLflow Tracking UI | http://localhost:5000      |
+| Prometheus         | http://localhost:9090      |
+| Grafana            | http://localhost:3000      |
+>>>>>>> cb59361 ( docs: add README and screenshots)
 
 ### 6. Run API Standalone
 
@@ -389,6 +462,7 @@ python -m uvicorn api.main:app --host 0.0.0.0 --port 8000
 
 **Logged Parameters:**
 
+<<<<<<< HEAD
 | Parameter | Value |
 |-----------|-------|
 | `dataset_size` | 20,631 |
@@ -402,6 +476,21 @@ python -m uvicorn api.main:app --host 0.0.0.0 --port 8000
 | Metric | Value |
 |--------|-------|
 | `val_mae` | 2.091 |
+=======
+| Parameter      | Value  |
+| -------------- | ------ |
+| `dataset_size` | 20,631 |
+| `n_features`   | 27     |
+| `train_size`   | 16,504 |
+| `val_size`     | 4,127  |
+| `test_ratio`   | 0.2    |
+
+**Logged Metrics:**
+
+| Metric              | Value |
+| ------------------- | ----- |
+| `val_mae`           | 2.091 |
+>>>>>>> cb59361 ( docs: add README and screenshots)
 | `overfitting_ratio` | 1.261 |
 
 ---
@@ -476,6 +565,7 @@ python -m uvicorn api.main:app --host 0.0.0.0 --port 8000
 <img src="docs/images/aws-ec2-detail.png" alt="AWS EC2 Instance Summary" width="600"/>
 </div>
 
+<<<<<<< HEAD
 | Property | Value |
 |----------|-------|
 | Instance ID | `i-053714d280c89d807` |
@@ -485,6 +575,17 @@ python -m uvicorn api.main:app --host 0.0.0.0 --port 8000
 | Region | `ap-south-1` (Mumbai) |
 | State | ✅ Running |
 | VPC | `vpc-0201659331be33189` |
+=======
+| Property      | Value                   |
+| ------------- | ----------------------- |
+| Instance ID   | `i-053714d280c89d807`   |
+| Instance Type | `t3.micro`              |
+| Public IPv4   | `65.0.135.39`           |
+| Private IPv4  | `172.31.9.250`          |
+| Region        | `ap-south-1` (Mumbai)   |
+| State         | ✅ Running              |
+| VPC           | `vpc-0201659331be33189` |
+>>>>>>> cb59361 ( docs: add README and screenshots)
 
 ---
 
@@ -544,7 +645,11 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
+<<<<<<< HEAD
           python-version: '3.11'
+=======
+          python-version: "3.11"
+>>>>>>> cb59361 ( docs: add README and screenshots)
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Run tests
@@ -575,6 +680,7 @@ Base URL: `http://localhost:8000` (local) | `http://65.0.135.39:8000` (productio
 
 ### Endpoints
 
+<<<<<<< HEAD
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | `GET` | `/` | Root / health check |
@@ -583,6 +689,16 @@ Base URL: `http://localhost:8000` (local) | `http://65.0.135.39:8000` (productio
 | `POST` | `/predict/batch` | Batch CSV prediction |
 | `GET` | `/metrics` | Prometheus metrics endpoint |
 | `GET` | `/docs` | Swagger UI documentation |
+=======
+| Method | Endpoint         | Description                  |
+| ------ | ---------------- | ---------------------------- |
+| `GET`  | `/`              | Root / health check          |
+| `GET`  | `/health`        | API + model status           |
+| `POST` | `/predict`       | Single engine RUL prediction |
+| `POST` | `/predict/batch` | Batch CSV prediction         |
+| `GET`  | `/metrics`       | Prometheus metrics endpoint  |
+| `GET`  | `/docs`          | Swagger UI documentation     |
+>>>>>>> cb59361 ( docs: add README and screenshots)
 
 ### Sample Prediction Request
 
@@ -617,6 +733,7 @@ curl -X POST "http://localhost:8000/predict" \
 
 <div align="center">
 
+<<<<<<< HEAD
 | Metric | Value | Impact |
 |--------|-------|--------|
 | Model R² | **0.997** | Near-perfect variance explanation |
@@ -626,6 +743,17 @@ curl -X POST "http://localhost:8000/predict" \
 | Uptime Monitoring | **Prometheus + Grafana** | Continuous observability |
 | Alert Threshold | **RUL ≤ 30 cycles** | Early warning system |
 | Deployment | **AWS EC2 t3.micro** | Cloud-native, scalable |
+=======
+| Metric            | Value                    | Impact                            |
+| ----------------- | ------------------------ | --------------------------------- |
+| Model R²          | **0.997**                | Near-perfect variance explanation |
+| Validation RMSE   | **3.75 cycles**          | High prediction accuracy          |
+| Validation MAE    | **2.09 cycles**          | Low average prediction error      |
+| API Response      | **< 50ms**               | Production-grade latency          |
+| Uptime Monitoring | **Prometheus + Grafana** | Continuous observability          |
+| Alert Threshold   | **RUL ≤ 30 cycles**      | Early warning system              |
+| Deployment        | **AWS EC2 t3.micro**     | Cloud-native, scalable            |
+>>>>>>> cb59361 ( docs: add README and screenshots)
 
 </div>
 
@@ -667,7 +795,11 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 
 [![GitHub](https://img.shields.io/badge/GitHub-KiranRathod4-181717?style=for-the-badge&logo=github)](https://github.com/KiranRathod4)
 
+<<<<<<< HEAD
 *Built with ❤️ — combining ML engineering, cloud infrastructure, and real-time observability into a single production-ready system.*
+=======
+_Built with ❤️ — combining ML engineering, cloud infrastructure, and real-time observability into a single production-ready system._
+>>>>>>> cb59361 ( docs: add README and screenshots)
 
 </div>
 
@@ -679,6 +811,7 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 
 > To render all screenshots correctly, create a `docs/images/` folder in your repo root and add the following files:
 
+<<<<<<< HEAD
 | File Name | Screenshot |
 |-----------|-----------|
 | `project-proposal.png` | Project proposal document |
@@ -700,6 +833,29 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 | `aws-ec2-instances.png` | AWS EC2 instances list |
 | `aws-ec2-detail.png` | EC2 instance summary |
 | `ec2-uvicorn-running.png` | Uvicorn running on EC2 terminal |
+=======
+| File Name                      | Screenshot                               |
+| ------------------------------ | ---------------------------------------- |
+| `project-proposal.png`         | Project proposal document                |
+| `dashboard-main-light.png`     | Aircraft Engine RUL Predictor (light UI) |
+| `dashboard-dark.png`           | Predictive Maintenance Dashboard (dark)  |
+| `quick-links.png`              | Quick Links panel                        |
+| `predict-rul-44.png`           | Prediction result — 44 cycles            |
+| `predict-rul-61.png`           | Prediction result — 61 cycles            |
+| `training-output.png`          | Training terminal output (RMSE / R²)     |
+| `training-summary.png`         | 4-panel training summary plot            |
+| `residuals-plot.png`           | Standalone residuals plot                |
+| `mlflow-experiments.png`       | MLflow experiments list                  |
+| `mlflow-run-details.png`       | MLflow run details & parameters          |
+| `prometheus-targets.png`       | Prometheus target health                 |
+| `grafana-dashboard.png`        | Grafana live dashboard                   |
+| `grafana-requests-panel.png`   | Grafana HTTP requests panel              |
+| `grafana-alert-rule.png`       | Grafana Low RUL alert rule               |
+| `grafana-alert-evaluation.png` | Grafana alert evaluation config          |
+| `aws-ec2-instances.png`        | AWS EC2 instances list                   |
+| `aws-ec2-detail.png`           | EC2 instance summary                     |
+| `ec2-uvicorn-running.png`      | Uvicorn running on EC2 terminal          |
+>>>>>>> cb59361 ( docs: add README and screenshots)
 
 </div>
 
