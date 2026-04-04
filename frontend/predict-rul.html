@@ -382,13 +382,17 @@ document.addEventListener('DOMContentLoaded', () => {
       refreshReportTab();
 
     } catch (err) {
-      resultEl.innerHTML = errorHTML(err.message);
+      resultEl.innerHTML = errorHTML(err.message, 'retryManual');
     } finally {
       btn.disabled = false;
       btnText.textContent = 'Predict RUL';
     }
   });
 });
+
+function retryManual() {
+  document.getElementById('prediction-form').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+}
 
 function singleResultHTML(res) {
   const rul = Math.round(res.rul_prediction ?? res.predicted_rul ?? 0);
@@ -482,7 +486,7 @@ async function runBatchPredict() {
     resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     refreshReportTab();
   } catch (err) {
-    resultEl.innerHTML = errorHTML(err.message);
+    resultEl.innerHTML = errorHTML(err.message, 'runBatchPredict');
   } finally {
     btn.disabled = false;
     btnText.textContent = 'Run Batch Prediction';
@@ -653,12 +657,19 @@ function loadingHTML() {
   </div>`;
 }
 
-function errorHTML(msg) {
+function errorHTML(msg, retryFn) {
+  const isWakeup = msg.toLowerCase().includes('render') || msg.toLowerCase().includes('cannot reach');
+  const retryBtn = retryFn
+    ? `<button onclick="${retryFn}()" class="mt-3 flex items-center gap-1 px-3 py-1.5 bg-red-600 text-white text-xs rounded-lg hover:bg-red-700 transition-colors">
+        <span class="material-symbols-outlined text-sm">refresh</span>Retry
+       </button>`
+    : '';
   return `<div class="fade-in flex items-start gap-3 p-5 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl">
-    <span class="material-symbols-outlined text-red-500 shrink-0">error</span>
+    <span class="material-symbols-outlined text-red-500 shrink-0">${isWakeup ? 'schedule' : 'error'}</span>
     <div>
-      <p class="font-medium text-red-800 dark:text-red-300 text-sm">Prediction failed</p>
+      <p class="font-medium text-red-800 dark:text-red-300 text-sm">${isWakeup ? 'API warming up…' : 'Prediction failed'}</p>
       <p class="text-red-700 dark:text-red-400 text-xs mt-1">${msg}</p>
+      ${retryBtn}
     </div>
   </div>`;
 }

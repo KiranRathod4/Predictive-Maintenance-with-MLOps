@@ -1,10 +1,30 @@
-# prometheus.yml (in root folder)
 global:
-  scrape_interval: 15s
+  scrape_interval: 30s # gentle on Render free tier
+  scrape_timeout: 25s
+  evaluation_interval: 30s
 
 scrape_configs:
-  - job_name: "predictive-maintenance"
-    static_configs:
-      - targets: ['host.docker.internal:8000']
-    scrape_interval: 10s
+  # ── Live API on Render ────────────────────────────────────────────────────
+  # Scrapes /metrics from the deployed FastAPI every 30s
+  # This is what feeds the Grafana prediction_value graphs
+  - job_name: "predictive-maintenance-render"
+    scheme: https
     metrics_path: /metrics
+    static_configs:
+      - targets:
+          - "predictive-maintenance-with-mlops-1.onrender.com"
+    # Free tier can be slow — give it plenty of time
+    scrape_interval: 30s
+    scrape_timeout: 25s
+    # Label all metrics from this source
+    relabel_configs:
+      - target_label: env
+        replacement: render-production
+
+  # ── Local API (when running docker-compose locally) ──────────────────────
+  # Uncomment this block when testing locally
+  # - job_name: "predictive-maintenance-local"
+  #   static_configs:
+  #     - targets: ['host.docker.internal:8000']
+  #   metrics_path: /metrics
+  #   scrape_interval: 10s
