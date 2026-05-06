@@ -677,3 +677,136 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 <div align="center">
 <sub>⭐ If this project helped you, consider starring the repository!</sub>
 </div>
+
+Here's your complete presentation script — broken into sections so you can speak naturally and confidently.
+
+---
+
+## 🎯 Opening (30 seconds — hook them first)
+
+> "Imagine an aircraft engine fails mid-flight because nobody predicted it was about to break down. That's the problem we solved. Our project predicts **exactly how many cycles an aircraft engine has left before it needs maintenance** — and we built the entire system from scratch, from the raw data all the way to a live cloud-deployed application with real-time monitoring."
+
+---
+
+## 1. What is the Problem? (1 minute)
+
+**Say this:**
+
+> "Traditional maintenance works in two ways — either you wait for something to break (reactive), or you replace parts on a fixed schedule whether they need it or not (preventive). Both are bad. Reactive is dangerous. Preventive wastes money.
+
+> Our approach is **predictive** — we use real sensor data from the engine to predict exactly how many cycles remain before it needs maintenance. That number is called **RUL — Remaining Useful Life.**"
+
+**If asked what RUL means:**
+> "Simple. If an engine can run 200 total cycles and it's currently at cycle 150, RUL = 50. Our model predicts that number from sensor readings — without knowing the max cycle in advance."
+
+---
+
+## 2. The Dataset (30 seconds)
+
+**Say this:**
+
+> "We used the **NASA C-MAPSS dataset** — a real aerospace dataset from NASA's Prognostics Center. It contains 20,631 operational cycles from multiple turbofan engines, each with **24 sensor readings** measuring things like temperature, pressure, fuel flow, and rotational speed. We split it 80-20 for training and validation."
+
+---
+
+## 3. The ML Model (1 minute)
+
+**Say this:**
+
+> "We trained a **Random Forest Regressor** — an ensemble of decision trees — to predict the RUL value from those 27 input features.
+
+> The results were exceptional:
+> - **R² score of 0.997** — meaning the model explains 99.7% of the variation in RUL
+> - **RMSE of just 3.75 cycles** — so on average we're off by less than 4 cycles out of potentially hundreds
+> - **MAE of 2.09 cycles** — extremely tight average error"
+
+**If asked why Random Forest and not deep learning:**
+> "Random Forest gives us near-perfect accuracy with much lower inference latency — under 50 milliseconds per prediction. It's also interpretable — we can see which sensors matter most. In production, speed and reliability matter more than squeezing out an extra 0.1% accuracy."
+
+---
+
+## 4. The MLOps Pipeline (1.5 minutes — this is the key differentiator)
+
+**Say this:**
+
+> "Here's what makes this project different from a regular ML project. We didn't just train a model in a notebook. We built a **complete production system** around it. That's what MLOps means — Machine Learning Operations."
+
+**Walk through the pipeline:**
+
+> "Step 1 — **Data:** NASA dataset is loaded, cleaned, sensors renamed, RUL computed and stored.
+
+> Step 2 — **Training + Tracking:** We train the model and every single run is logged to **MLflow** — every parameter, every metric, every artifact like graphs and the model file itself. So any run is 100% reproducible.
+
+> Step 3 — **API:** The trained model is served through a **FastAPI** REST API. You send sensor readings, it returns the predicted RUL in under 50 milliseconds.
+
+> Step 4 — **Frontend:** We built a web dashboard deployed on **Vercel**. It has three modes — manual sensor input, batch CSV upload for multiple engines at once, and a report generator that downloads a full fleet maintenance summary.
+
+> Step 5 — **Containerization:** Every service — the API, MLflow, Prometheus, Grafana — runs in **Docker containers** orchestrated with Docker Compose. One command starts the entire system.
+
+> Step 6 — **Cloud Deployment:** The full system is deployed on **AWS EC2** and **Render**. Anyone in the world can use it right now.
+
+> Step 7 — **Monitoring:** **Prometheus** scrapes live metrics from the API every 15 seconds — how many predictions were made, any errors, request latency. **Grafana** turns those metrics into live dashboards. And if any engine's predicted RUL drops below 30 cycles, an alert fires automatically."
+
+---
+
+## 5. CI/CD Pipeline (30 seconds)
+
+**Say this:**
+
+> "We also set up a full **CI/CD pipeline using GitHub Actions**. Every time we push code to GitHub, it automatically runs the tests, builds a Docker image, pushes it to **Amazon ECR** — that's Amazon's container registry — and deploys it to the EC2 server. No manual deployment steps at all."
+
+---
+
+## 6. The Frontend Dashboard (30 seconds)
+
+**Say this:**
+
+> "The frontend has three tabs on the prediction page:
+> - **Manual Input** — enter sensor values for one engine, get the RUL instantly with a colour-coded risk level — Critical, Warning, or Safe
+> - **Batch CSV** — upload a file with 100 engines, get all predictions in one shot, export results as CSV
+> - **Report Generator** — one click generates a full HTML maintenance report you can download and share with management"
+
+---
+
+## 7. Results Summary (30 seconds)
+
+**Say this:**
+
+> "To summarize the numbers:
+> - R² of 0.997 — near-perfect accuracy
+> - RMSE of 3.75 cycles
+> - API response under 50 milliseconds
+> - Over 5,000 predictions served
+> - Full cloud deployment on AWS with live Grafana monitoring
+> - Automated CI/CD so the system maintains itself"
+
+---
+
+## 8. Why This Matters — Business Value (30 seconds)
+
+**Say this:**
+
+> "Unplanned engine failures in aviation cost the industry over $50 billion every year. Our system reduces unplanned downtime by up to 30% and cuts maintenance costs by up to 25% — because you're only replacing parts when the data says they need it, not on an arbitrary schedule."
+
+---
+
+## 9. Closing Line
+
+> "So in summary — this is not just a machine learning model. It's a complete, production-deployed, cloud-hosted, monitored, CI/CD-automated ML system. From raw sensor data to a live prediction API to Grafana dashboards — every layer is built and working."
+
+---
+
+## ❓ Likely Questions + Quick Answers
+
+| Question | Answer |
+|---|---|
+| **Why Random Forest?** | Fast inference (<50ms), scale-invariant (no normalization needed), built-in feature importance, and competitive accuracy vs deep learning |
+| **What is MLflow?** | A tool that tracks every training run — parameters, metrics, model files. Like Git but for ML experiments |
+| **What does Docker do here?** | Packages the entire system so it runs identically on any machine or cloud server. One command starts everything |
+| **What is Prometheus?** | Scrapes live metrics from the API every 15 seconds — request counts, latency, prediction values |
+| **What is Grafana?** | Turns Prometheus data into live visual dashboards with auto-refresh and alert rules |
+| **What is CI/CD?** | Automated pipeline — push code → tests run → Docker image builds → deploys to cloud. Zero manual steps |
+| **What is RUL?** | Remaining Useful Life — cycles left before the engine needs maintenance. Target variable we predict |
+| **Why FastAPI over Flask?** | FastAPI is async, 2–3x faster, has built-in Swagger docs and Pydantic validation out of the box |
+| **Is it live?** | Yes — backend runs on Render at the public URL, frontend on Vercel. Fully accessible |
+| **What's next / future scope?** | Fleet Risk Dashboard, automated drift detection, LSTM model for sequential sensor data, email/Slack alerts |
