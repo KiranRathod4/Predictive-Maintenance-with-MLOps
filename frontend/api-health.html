@@ -26,7 +26,7 @@
 </style>
 </head>
 <body class="bg-bg-light dark:bg-bg-dark font-display text-gray-800 dark:text-gray-200 min-h-screen">
-
+<script src="auth-guard.js"></script>
 <div id="overlay" onclick="closeSidebar()"></div>
 <div class="flex min-h-screen">
 
@@ -42,6 +42,13 @@
         <a href="model-metrics.html" class="sidebar-link"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22 2H2v20h20V2zM8 18H4V4h4v14zm6 0h-4V4h4v14zm6 0h-4V4h4v14z"/></svg>Model Metrics</a>
         <a href="mlflow.html" class="sidebar-link"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>MLflow Experiments</a>
         <a href="api-health.html" class="sidebar-link active"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>API Health</a>
+        <button onclick="logout()"
+        class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-red-400 hover:bg-red-400/10 w-full mt-4 transition-colors">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5-5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+        </svg>
+        Logout
+        </button>
       </nav>
     </div>
     <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">

@@ -29,6 +29,7 @@
 </head>
 <body class="bg-background-light dark:bg-background-dark font-display text-[#101922] dark:text-[#f6f7f8]">
 <div class="flex min-h-screen">
+<script src="auth-guard.js"></script>
 <aside class="w-64 bg-background-light/50 dark:bg-background-dark/50 p-4 flex flex-col justify-between">
 <div>
 <a href="index.html" class="flex items-center gap-4 mb-6">
@@ -70,6 +71,13 @@
 </svg>
 <span class="font-medium text-sm">API Health</span>
 </a>
+<button onclick="logout()"
+  class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-red-400 hover:bg-red-400/10 w-full mt-4 transition-colors">
+  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5-5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+  </svg>
+  Logout
+</button>
 </nav>
 </div>
 <div>

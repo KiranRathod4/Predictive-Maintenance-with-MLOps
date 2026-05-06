@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin Login — Predictive Maintenance</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          primary: '#1173d4',
+          'bg-dark': '#101922',
+        },
+        fontFamily: { display: ['Inter', 'sans-serif'] },
+      },
+    },
+  };
+</script>
+<style>
+  body { font-family: 'Inter', sans-serif; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in { animation: fadeIn 0.5s ease forwards; }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60%  { transform: translateX(-6px); }
+    40%, 80%  { transform: translateX(6px); }
+  }
+  .shake { animation: shake 0.4s ease; }
+
+  .input-field {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .input-field:focus {
+    outline: none;
+    border-color: #1173d4;
+    box-shadow: 0 0 0 3px rgba(17,115,212,0.25);
+  }
+  .input-field::placeholder { color: rgba(255,255,255,0.3); }
+
+  /* subtle grid pattern */
+  .bg-grid {
+    background-color: #101922;
+    background-image:
+      linear-gradient(rgba(17,115,212,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(17,115,212,0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+</style>
+</head>
+<body class="bg-grid min-h-screen flex items-center justify-center p-4">
+
+  <!-- Glow blob -->
+  <div style="position:fixed;top:-100px;left:50%;transform:translateX(-50%);width:600px;height:300px;
+    background:radial-gradient(ellipse at center, rgba(17,115,212,0.15) 0%, transparent 70%);
+    pointer-events:none;"></div>
+
+  <div class="fade-in w-full max-w-md">
+
+    <!-- Logo + brand -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 border border-primary/30 mb-4">
+        <svg class="w-8 h-8 text-primary" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <path d="M39.5563 34.1455V13.8546C39.5563 15.708 36.8773 17.3437 32.7927 18.3189C30.2914 18.916 27.263 19.2655 24 19.2655C20.737 19.2655 17.7086 18.916 15.2073 18.3189C11.1227 17.3437 8.44365 15.708 8.44365 13.8546V34.1455C8.44365 35.9988 11.1227 37.6346 15.2073 38.6098C17.7086 39.2069 20.737 39.5564 24 39.5564C27.263 39.5564 30.2914 39.2069 32.7927 38.6098C36.8773 37.6346 39.5563 35.9988 39.5563 34.1455Z" fill="#1173d4"/>
+        </svg>
+      </div>
+      <h1 class="text-2xl font-bold text-white">Predictive Maintenance</h1>
+      <p class="text-sm text-gray-400 mt-1">MLOps System — Admin Portal</p>
+    </div>
+
+    <!-- Login card -->
+    <div id="login-card"
+      style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;
+             backdrop-filter:blur(12px);" class="p-8">
+
+      <h2 class="text-lg font-semibold text-white mb-1">Sign in</h2>
+      <p class="text-sm text-gray-400 mb-6">Enter your admin credentials to continue</p>
+
+      <!-- Error message -->
+      <div id="error-msg"
+        style="display:none;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;"
+        class="flex items-center gap-2 p-3 mb-5">
+        <svg class="w-4 h-4 text-red-400 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+        </svg>
+        <span id="error-text" class="text-sm text-red-400">Invalid credentials. Please try again.</span>
+      </div>
+
+      <!-- Username -->
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-300 mb-1.5">Username</label>
+        <input id="username" type="text" placeholder="Enter username"
+          class="input-field w-full px-4 py-3 rounded-lg text-sm"
+          onkeydown="if(event.key==='Enter') attemptLogin()"/>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-6">
+        <label class="block text-sm font-medium text-gray-300 mb-1.5">Password</label>
+        <div class="relative">
+          <input id="password" type="password" placeholder="Enter password"
+            class="input-field w-full px-4 py-3 rounded-lg text-sm pr-12"
+            onkeydown="if(event.key==='Enter') attemptLogin()"/>
+          <button onclick="togglePwd()" type="button"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors">
+            <svg id="eye-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7
+                   -1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Login button -->
+      <button onclick="attemptLogin()" id="login-btn"
+        class="w-full py-3 px-4 rounded-lg font-semibold text-sm text-white transition-all duration-200
+               flex items-center justify-center gap-2"
+        style="background:#1173d4;">
+        <span id="btn-text">Sign In</span>
+        <svg id="btn-spinner" class="hidden w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
+        </svg>
+      </button>
+
+      <!-- Demo credentials hint -->
+      <div class="mt-5 pt-5" style="border-top:1px solid rgba(255,255,255,0.06);">
+        <p class="text-xs text-gray-500 text-center">
+          Demo credentials:
+          <span class="text-gray-300 font-mono">admin</span> /
+          <span class="text-gray-300 font-mono">admin123</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <p class="text-center text-xs text-gray-600 mt-6">
+      Predictive Maintenance with MLOps · VTU Final Year Project 2025–26
+    </p>
+  </div>
+
+<script>
+  // ── Credentials (demo — hardcoded) ──────────────────────────────────────
+  const ADMIN_USER = 'admin';
+  const ADMIN_PASS = 'admin123';
+
+  // ── If already logged in, skip to dashboard ─────────────────────────────
+  if (sessionStorage.getItem('pm_admin_logged_in') === 'true') {
+    window.location.replace('index.html');
+  }
+
+  function togglePwd() {
+    const inp = document.getElementById('password');
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+  }
+
+  function showError(msg) {
+    const err = document.getElementById('error-msg');
+    document.getElementById('error-text').textContent = msg;
+    err.style.display = 'flex';
+    document.getElementById('login-card').classList.add('shake');
+    setTimeout(() => document.getElementById('login-card').classList.remove('shake'), 400);
+  }
+
+  function hideError() {
+    document.getElementById('error-msg').style.display = 'none';
+  }
+
+  function setLoading(on) {
+    document.getElementById('btn-text').textContent = on ? 'Signing in…' : 'Sign In';
+    document.getElementById('btn-spinner').classList.toggle('hidden', !on);
+    document.getElementById('login-btn').disabled = on;
+    document.getElementById('login-btn').style.opacity = on ? '0.7' : '1';
+  }
+
+  async function attemptLogin() {
+    hideError();
+    const user = document.getElementById('username').value.trim();
+    const pass = document.getElementById('password').value;
+
+    if (!user || !pass) {
+      showError('Please enter both username and password.');
+      return;
+    }
+
+    setLoading(true);
+
+    // Simulate a brief auth delay for realism
+    await new Promise(r => setTimeout(r, 600));
+
+    if (user === ADMIN_USER && pass === ADMIN_PASS) {
+      sessionStorage.setItem('pm_admin_logged_in', 'true');
+      sessionStorage.setItem('pm_admin_user', user);
+      sessionStorage.setItem('pm_login_time', new Date().toLocaleString());
+      window.location.replace('index.html');
+    } else {
+      setLoading(false);
+      showError('Invalid username or password. Please try again.');
+      document.getElementById('password').value = '';
+      document.getElementById('username').focus();
+    }
+  }
+
+  // Auto-focus username on load
+  window.onload = () => document.getElementById('username').focus();
+</script>
+</body>
+</html>

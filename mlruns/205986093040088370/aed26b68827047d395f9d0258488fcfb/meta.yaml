@@ -1,0 +1,14 @@
+artifact_uri: file:///D:/predictive-maintenance-with-MLOPS/mlruns/205986093040088370/aed26b68827047d395f9d0258488fcfb/artifacts
+end_time: 1778048162789
+entry_point_name: ''
+experiment_id: '205986093040088370'
+lifecycle_stage: active
+run_id: aed26b68827047d395f9d0258488fcfb
+run_name: rf_model_20260506_114537
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1778048137398
+status: 3
+tags: []
+user_id: kiran

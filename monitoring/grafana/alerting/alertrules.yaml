@@ -1,0 +1,64 @@
+apiVersion: 1
+
+groups:
+  - orgId: 1
+    name: Low RUL Alerts
+    folder: MLOps Alerts
+    interval: 1m
+    rules:
+      - uid: low-rul-critical-v1
+        title: "Critical — Engine RUL Below 30 Cycles"
+        condition: C
+        data:
+          # Step A: Query average predicted RUL over last 2 minutes
+          - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus-main
+            model:
+              expr: rate(prediction_value_sum[2m]) / rate(prediction_value_count[2m])
+              refId: A
+              instant: false
+              range: true
+              legendFormat: "Avg RUL"
+
+          # Step C: Threshold — alert if avg RUL drops below 30
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              type: threshold
+              refId: C
+              expression: A
+              conditions:
+                - evaluator:
+                    type: lt
+                    params:
+                      - 30
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - A
+                  reducer:
+                    type: last
+                    params: []
+
+        # Must stay below threshold for 30 seconds before firing
+        # (kept short so you can demo it quickly)
+        for: 30s
+
+        noDataState: NoData
+        execErrState: Error
+
+        annotations:
+          summary: "Engine RUL critically low — action required"
+          description: >-
+            Predicted Remaining Useful Life has dropped below 30 cycles.
+            Immediate maintenance scheduling is required before next operational cycle.
+
+        labels:
+          severity: critical
+          team: maintenance
+
+        isPaused: false

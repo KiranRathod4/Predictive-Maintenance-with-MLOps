@@ -1,0 +1,10 @@
+artifact_location: file:///D:/predictive-maintenance-with-MLOPS/mlruns/205986093040088370/models/m-c15e54f5c9934cdbb25dc42a38578c6b/artifacts
+creation_timestamp: 1778048141840
+experiment_id: '205986093040088370'
+last_updated_timestamp: 1778048154585
+model_id: m-c15e54f5c9934cdbb25dc42a38578c6b
+model_type: null
+name: model
+source_run_id: aed26b68827047d395f9d0258488fcfb
+status: 2
+status_message: null
